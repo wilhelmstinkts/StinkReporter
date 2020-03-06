@@ -1,0 +1,61 @@
+openapi: "3.0.2"
+info:
+  title: Stink Reporter
+  description: 'Report when and where it stinks and query for past stinks.'
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 0.0.0
+servers:
+- url: https://hierstinkts.wilhelm-gibt-keine-ruh.de/api
+tags:
+- name: play
+  description: 'Play Rock, Paper, Scissor'
+paths:
+  /play:
+    get:
+      tags:
+      - play
+      summary: 'Make a game'
+      operationId: play
+      responses:
+        '200':
+          description: "The game's result"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gameResult'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'You must say rock, paper or scissor'
+      parameters:
+      - in: query
+        name: myChoice
+        required: true
+        description: 'What have you picked?'
+        schema:
+          $ref: '#/components/schemas/choices'
+components:
+  schemas:
+    gameResult:
+      properties:
+        serversChoice:
+          description: 'What the server picked'
+          $ref: '#/components/schemas/choices'
+        playersChoice:
+          description: "What the player picked"
+          $ref: '#/components/schemas/choices'
+        winner:
+          description: 'Who won the game'
+          type: string
+          enum: [server, player]
+    choices:
+      type: string
+      enum:
+        - rock
+        - paper
+        - scissor
