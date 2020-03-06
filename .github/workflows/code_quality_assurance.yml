@@ -1,0 +1,16 @@
+name: Code Quality Assurance
+
+on: [push]
+
+jobs:
+  unit-test:
+   runs-on: ubuntu-latest   
+   steps:
+    - name: Checkout head
+      uses: actions/checkout@v2
+    - name: Install requirements
+      working-directory: ./source/lib
+      run: composer update
+    - name: PhpUnitTest
+      working-directory: ./source/lib
+      run: phpunit
