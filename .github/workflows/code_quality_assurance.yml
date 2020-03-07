@@ -11,6 +11,9 @@ jobs:
     - name: Install requirements
       working-directory: ./source/lib
       run: composer update
-    - name: PhpUnitTest
+    - name: Unit Tests
       working-directory: ./source/lib
       run: phpunit
+    - name: Api Tests
+      working-directory: ./apitests
+      run: ./run-api-tests.sh
