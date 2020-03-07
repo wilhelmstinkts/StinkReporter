@@ -15,7 +15,7 @@ jobs:
       working-directory: ./source
       run: composer test
     - name: Linting
-      working-directory: ./apitests
+      working-directory: ./source
       run: composer phpcs
     - name: Set up Python 3.x
       uses: actions/setup-python@v1
