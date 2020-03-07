@@ -22,6 +22,18 @@ $router->get('/', function () use ($router) {
 });
 
 /**
+ * get getMessages
+ * Summary: 
+ * Notes: 
+ */
+$router->get('/api/message', 'MessageApi@getMessages');
+/**
+ * post postNewMessage
+ * Summary: 
+ * Notes: 
+ */
+$router->post('/api/message', 'MessageApi@postNewMessage');
+/**
  * get play
  * Summary: Make a game
  * Notes: 
