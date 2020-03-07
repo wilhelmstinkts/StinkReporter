@@ -1,6 +1,6 @@
 #!/bin/bash
 # Start local php server as a background thread
-nohup php -S localhost:8080 ../source/lib/public/index.php &> /dev/null &
+nohup php -S localhost:8080 ../source/index.php &> /dev/null &
 phpServerId=$!
 
 # Run the tests
