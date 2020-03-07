@@ -14,10 +14,16 @@ jobs:
     - name: Unit Tests
       working-directory: ./source/lib
       run: phpunit
-    - name: Api Tests
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Prepare Api Tests
       working-directory: ./apitests
       run: |
             sudo apt-get install dos2unix
             dos2unix ./*
             chmod +x ./run-api-tests.sh
-            ./run-api-tests.sh
+    - name: Run Api Tests
+      working-directory: ./apitests
+      run: ./run-api-tests.sh
