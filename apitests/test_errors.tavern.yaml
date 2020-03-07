@@ -1,0 +1,9 @@
+test_name: Play with the started api
+
+stages:
+  - name: Test that our stub throws server errors
+    request:
+      url: http://localhost:8080/api/play
+      method: GET
+    response:
+      status_code: 500
