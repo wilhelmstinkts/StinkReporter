@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-   runs-on: ubuntu-latest   
+   runs-on: ubuntu-latest
    steps:
     - name: Checkout head
       uses: actions/checkout@v2
@@ -24,6 +24,7 @@ jobs:
             sudo apt-get install dos2unix
             dos2unix ./*
             chmod +x ./run-api-tests.sh
+            pip install tavern
     - name: Run Api Tests
       working-directory: ./apitests
       run: ./run-api-tests.sh
