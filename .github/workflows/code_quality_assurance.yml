@@ -9,11 +9,14 @@ jobs:
     - name: Checkout head
       uses: actions/checkout@v2
     - name: Install requirements
-      working-directory: ./source/lib
+      working-directory: ./source
       run: composer update
     - name: Unit Tests
-      working-directory: ./source/lib
-      run: phpunit
+      working-directory: ./source
+      run: composer test
+    - name: Linting
+      working-directory: ./apitests
+      run: composer phpcs
     - name: Set up Python 3.x
       uses: actions/setup-python@v1
       with:
