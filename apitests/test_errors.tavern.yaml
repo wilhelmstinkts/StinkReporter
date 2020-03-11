@@ -1,9 +1,9 @@
-test_name: Play with the started api
+test_name: Client errors
 
 stages:
-  - name: Test that our stub throws server errors
+  - name: When there are no reports stored, return 404
     request:
-      url: http://localhost:8080/api/play
+      url: http://localhost:8080/api/v0/report
       method: GET
     response:
-      status_code: 500
+      status_code: 404
