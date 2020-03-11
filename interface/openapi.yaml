@@ -9,22 +9,26 @@ info:
 servers:
   - url: https://hierstinkts.wilhelm-gibt-keine-ruh.de/api
 tags:
-  - name: play
-    description: "Play Rock, Paper, Scissor"
-  - name: message
-    description: "Something you saay"
+  - name: report
+    description: "Report when and where it stinks"
 paths:
-  /message:
+  /v0/report:
     post:
+      description: "Save new report to database and write email"
       tags:
-        - message
-      operationId: postNewMessage
+        - report
+      operationId: postNewReport
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/message"
+              type: object
+              properties:
+                report:
+                  $ref: "#/components/schemas/report"
+                g-recaptcha-response:
+                  type: string
       responses:
         "201":
           description: "Message saved"
@@ -36,77 +40,92 @@ paths:
                 type: string
                 example: "You must provide a message in the request body"
     get:
+      description: "Get previously saved reports"
       tags:
-        - message
-      operationId: getMessages
+      - report
+      operationId: getReports
       responses:
         "200":
-          description: "Saved Messages"
+          description: "All reports"
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/message"
-        "404":
-          description: There are no messages
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "No messages there yet"
-
-  /play:
-    get:
-      tags:
-        - play
-      summary: "Make a game"
-      operationId: play
-      responses:
-        "200":
-          description: "The game's result"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/gameResult"
-        "400":
-          description: Bad Request
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "You must say rock, paper or scissor"
-      parameters:
-        - in: query
-          name: myChoice
-          required: true
-          description: "What have you picked?"
-          schema:
-            $ref: "#/components/schemas/choices"
+                  $ref: '#/components/schemas/report'
 components:
   schemas:
-    gameResult:
-      properties:
-        serversChoice:
-          description: "What the server picked"
-          $ref: "#/components/schemas/choices"
-        playersChoice:
-          description: "What the player picked"
-          $ref: "#/components/schemas/choices"
-        winner:
-          description: "Who won the game"
-          type: string
-          enum: [server, player]
-    choices:
-      type: string
-      enum:
-        - rock
-        - paper
-        - scissor
-    message:
+    report:
       type: object
       properties:
-        message:
+        time:
           type: string
-      required:
-        - message
+          format: datetime
+          example: "2020-03-10T12:00:00Z"
+        location:
+          type: object
+          anyOf:
+          - $ref: '#/components/schemas/address'
+          - $ref: '#/components/schemas/coordinates'
+        stink:
+          $ref: '#/components/schemas/stink'
+        reporter:
+          $ref: '#/components/schemas/reporter'
+      required: 
+        - time
+        - location
+        - stink
+        - reporter
+          
+    address:
+      type: object
+      properties:
+        street:
+         type: string
+        number:
+          type: string
+        zip:
+          type: string
+        city:
+          type: string
+      required: 
+        - street
+        - number
+        - zip
+        - city
+    coordinates:
+      type: object
+      properties:
+        longitude:
+          type: number
+          minimum: -90
+          maximum: +90
+        latitude:
+          type: number
+          minimum: -180
+          maximum: +180
+      required: 
+        - longitude
+        - latitude
+    stink:
+      type: object
+      properties:
+        kind:
+          type: string
+        intensity:
+          type: number
+          minimum: 1
+          maximum: 5
+      required: 
+        - kind
+        - intensity
+    reporter:
+      type: object
+      properties:
+        name:
+         type: string
+        email:
+          type: string
+      required: 
+        - name
+        - email
