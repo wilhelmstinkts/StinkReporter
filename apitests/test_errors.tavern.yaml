@@ -1,9 +1,11 @@
 test_name: Client errors
 
 stages:
-  - name: When there are no reports stored, return 404
+  - name: When there are no reports stored, return empty array
     request:
       url: http://localhost:8080/api/v0/report
       method: GET
     response:
-      status_code: 404
+      status_code: 200
+      body:
+        - !anything
