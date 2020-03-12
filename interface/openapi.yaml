@@ -27,8 +27,9 @@ paths:
               properties:
                 report:
                   $ref: "#/components/schemas/report"
-                g-recaptcha-response:
+                captchaToken:
                   type: string
+                  description: "The token assigned by the captcha provider"
       responses:
         "201":
           description: "Message saved"
@@ -42,7 +43,7 @@ paths:
     get:
       description: "Get previously saved reports"
       tags:
-      - report
+        - report
       operationId: getReports
       responses:
         "200":
@@ -52,11 +53,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/report'
+                  $ref: "#/components/schemas/report"
 components:
   schemas:
     report:
       type: object
+      description: "The report of a notable stink event"
       properties:
         time:
           type: string
@@ -65,30 +67,34 @@ components:
         location:
           type: object
           anyOf:
-          - $ref: '#/components/schemas/address'
-          - $ref: '#/components/schemas/coordinates'
+            - $ref: "#/components/schemas/address"
+            - $ref: "#/components/schemas/coordinates"
         stink:
-          $ref: '#/components/schemas/stink'
+          $ref: "#/components/schemas/stink"
         reporter:
-          $ref: '#/components/schemas/reporter'
-      required: 
+          $ref: "#/components/schemas/reporter"
+      required:
         - time
         - location
         - stink
         - reporter
-          
+
     address:
       type: object
       properties:
         street:
-         type: string
+          type: string
+          example: "Garibaldistraße"
         number:
           type: string
+          example: "7 A"
         zip:
           type: string
+          example: "13158"
         city:
           type: string
-      required: 
+          example: "Berlin"
+      required:
         - street
         - number
         - zip
@@ -98,13 +104,15 @@ components:
       properties:
         longitude:
           type: number
+          example: 40.1234567
           minimum: -90
           maximum: +90
         latitude:
           type: number
+          example: -40.1234567
           minimum: -180
           maximum: +180
-      required: 
+      required:
         - longitude
         - latitude
     stink:
@@ -112,20 +120,24 @@ components:
       properties:
         kind:
           type: string
+          example: "Biomüll"
         intensity:
           type: number
+          example: 3
           minimum: 1
           maximum: 5
-      required: 
+      required:
         - kind
         - intensity
     reporter:
       type: object
       properties:
         name:
-         type: string
+          type: string
+          example: "Jane Doe"
         email:
           type: string
-      required: 
+          example: "jane.doe@provider.org"
+      required:
         - name
         - email
