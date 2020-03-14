@@ -78,7 +78,6 @@ components:
         - location
         - stink
         - reporter
-
     address:
       type: object
       properties:
@@ -90,10 +89,16 @@ components:
           example: "7 A"
         zip:
           type: string
-          example: "13158"
+          enum:
+            - "13158"
         city:
           type: string
-          example: "Berlin"
+          enum:
+            - "Berlin"
+        country:
+          type: string
+          enum:
+            - "Germany"
       required:
         - street
         - number
