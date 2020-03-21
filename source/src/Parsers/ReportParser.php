@@ -57,7 +57,7 @@ class ReportParser
         $address = $location["address"];
         $coordinates = $location["coordinates"];
         $hasAddress = !\is_null($address);
-        $hasCoordinates = !\is_null(coordinates);
+        $hasCoordinates = !\is_null($coordinates);
         if (!($hasAddress || $hasCoordinates)) {
             throw new Exception("You must provide an address or coordinates", 1);            
         }
@@ -110,7 +110,7 @@ class ReportParser
         $valid = $longitude >= $_southNorthBorders[0] && $longitude <= $_southNorthBorders[1] && $latitude >= $_eastWestBorders[0] && $latitude <= $_eastWestBorders[1];
         
         if (!$valid) {
-            throw new Exception("We currently only support Wilhelmsruh. It looks like you're out of its boundaries", 1);        }
+            throw new Exception("We currently only support Wilhelmsruh. It looks like you're out of its boundaries", 1); }
         }
 
     private static function getCoordinatesForAddress($address){
