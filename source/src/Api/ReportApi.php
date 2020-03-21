@@ -30,6 +30,9 @@ use OpenAPIServer\Parsers;
     {
         try {
             $requestBody = $request->getParsedBody();
+            if (is_null($requestBody)) {
+                throw new Exception("Request body is invalid json or empty", 1);
+            }
             $report = \OpenAPIServer\Parsers\ReportParser::parseBodyToReport($requestBody);
             $html = var_export($report, true);
             $response->getBody()->write($html);

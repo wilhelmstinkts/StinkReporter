@@ -104,6 +104,7 @@ components:
         - number
         - zip
         - city
+        - country
     coordinates:
       type: object
       properties:
