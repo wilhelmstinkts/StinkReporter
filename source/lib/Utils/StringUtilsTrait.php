@@ -90,8 +90,7 @@ trait StringUtilsTrait
         if ($lowercaseFirstLetter === true && strlen($word) > 0) {
             $i = 0;
             $charAt = substr($word, $i, 1);
-            while (
-                $i + 1 < strlen($word)
+            while ($i + 1 < strlen($word)
                 && !(
                     ($charAt >= 'a' && $charAt <= 'z')
                     || ($charAt >= 'A' && $charAt <= 'Z')

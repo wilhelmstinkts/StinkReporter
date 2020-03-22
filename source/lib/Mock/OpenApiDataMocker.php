@@ -207,8 +207,7 @@ final class OpenApiDataMocker implements IMocker
         };
 
         if ($enum !== null) {
-            if (
-                is_array($enum) === false
+            if (is_array($enum) === false
                 || empty($enum)
                 || count($enum) > count(array_unique($enum))
             ) {
@@ -346,8 +345,7 @@ final class OpenApiDataMocker implements IMocker
         $minSize = 0;
         $maxSize = \PHP_INT_MAX;
 
-        if (
-            (is_array($items) === false && is_object($items) === false)
+        if ((is_array($items) === false && is_object($items) === false)
             || (is_array($items) && array_key_exists('type', $items) === false)
             || (is_object($items) && isset($items->type) === false)
         ) {
@@ -443,8 +441,7 @@ final class OpenApiDataMocker implements IMocker
         }
 
         if ($required !== null) {
-            if (
-                is_array($required) === false
+            if (is_array($required) === false
                 || count($required) > count(array_unique($required))
             ) {
                 throw new InvalidArgumentException('The value of "required" must be an array. Elements of this array must be unique.');
@@ -530,8 +527,7 @@ final class OpenApiDataMocker implements IMocker
             'type' => null,
             'format' => null,
         ];
-        foreach (
-            [
+        foreach ([
                 'type',
                 'format',
                 'minimum',
@@ -553,8 +549,7 @@ final class OpenApiDataMocker implements IMocker
                 'required',
                 'example',
                 '$ref',
-            ] as $propName
-        ) {
+            ] as $propName) {
             if (is_array($val) && array_key_exists($propName, $val)) {
                 $props[$propName] = $val[$propName];
             } elseif (is_object($val) && isset($val->$propName)) {

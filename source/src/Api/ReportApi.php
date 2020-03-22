@@ -17,11 +17,11 @@ use OpenAPIServer\Parsers;
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
- class ReportApi extends AbstractReportApi
+class ReportApi extends AbstractReportApi
 {
 
     public function getReports(ServerRequestInterface $request, ResponseInterface $response, array $args)
-    {        
+    {
         $response->getBody()->write("I am a stub");
         return $response->withStatus(400);
     }
@@ -38,8 +38,7 @@ use OpenAPIServer\Parsers;
             $response->getBody()->write($html);
             
             return $response->withStatus(201);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $response->getBody()->write($e->getMessage());
             return $response->withStatus(400);
         }

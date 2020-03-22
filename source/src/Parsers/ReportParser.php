@@ -6,13 +6,15 @@ use Exception;
 use DateTime;
 use DateTimeInterface;
 use OpenAPIServer\Model;
+use OpenAPIServer\Services;
 
 class ReportParser
 {
-    public static function parseBodyToReport(array $body){
+    public static function parseBodyToReport(array $body)
+    {
         if (is_null($body["report"])) {
-            throw new Exception("Missing object report in the request body", 1);           
-        }        
+            throw new Exception("Missing object report in the request body", 1);
+        }
         $report = $body["report"];
         $reportSchema = \OpenAPIServer\Model\Report::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reportSchema, $report);
@@ -26,10 +28,11 @@ class ReportParser
         return $location;
     }
 
-    private static function throwOnMissingProps(array $schema, $given){
+    private static function throwOnMissingProps(array $schema, $given)
+    {
         if (!is_array($given)) {
             $type = gettype($given);
-            throw new Exception("Expected an object but got $given with type $type", 1);            
+            throw new Exception("Expected an object but got $given with type $type", 1);
         }
 
         foreach ($schema["properties"] as $propertyName => $value) {
@@ -41,25 +44,27 @@ class ReportParser
         }
     }
 
-    private static function parseTime(string $timeString){
-        $time = DateTime::createFromFormat(DateTimeInterface::ISO8601, $timeString); 
+    private static function parseTime(string $timeString)
+    {
+        $time = DateTime::createFromFormat(DateTimeInterface::ISO8601, $timeString);
         if ($time == false) {
-            throw new Exception("$timeString is not a valid time", 1);            
+            throw new Exception("$timeString is not a valid time", 1);
         }
         return $time;
     }
 
-    private static function parseLocation($location){
+    private static function parseLocation($location)
+    {
         if (!is_array($location)) {
             $type = gettype($location);
-            throw new Exception("Expected an object as location but got $location with type $type", 1);            
+            throw new Exception("Expected an object as location but got $location with type $type", 1);
         }
         $address = $location["address"];
         $coordinates = $location["coordinates"];
         $hasAddress = !\is_null($address);
         $hasCoordinates = !\is_null($coordinates);
         if (!($hasAddress || $hasCoordinates)) {
-            throw new Exception("You must provide an address or coordinates", 1);            
+            throw new Exception("You must provide an address or coordinates", 1);
         }
 
         if ($hasAddress) {
@@ -75,34 +80,36 @@ class ReportParser
         }
 
         if ($hasAddress && !$hasCoordinates) {
-            $coordinates = ReportParser::getCoordinatesForAddress($address);
+            $coordinates = \OpenAPIServer\Services\LocationService::getCoordinatesForAddress($address);
         }
 
         if (!$hasAddress && $hasCoordinates) {
-            $address = ReportParser::getAddressForCoordinates($coordinates);
+            $address = \OpenAPIServer\Services\LocationService::getAddressForCoordinates($coordinates);
         }
 
         return [ "address" => $address, "coordinates" => $coordinates ];
     }
 
-    private static function validateAddress($address){
+    private static function validateAddress($address)
+    {
         $_validStates = ["Germany"];
         $_validCities = ["Berlin"];
         $_validZips = ["13158"];
 
         if (!in_array($address["country"], $_validStates)) {
-            throw new Exception("We currently only support ".implode( ",", $_validStates ), 1);
+            throw new Exception("We currently only support " . implode(",", $_validStates), 1);
         }
 
         if (!in_array($address["city"], $_validCities)) {
-            throw new Exception("We currently only support ".implode( ",", $_validCities ), 1);
-        } 
+            throw new Exception("We currently only support " . implode(",", $_validCities), 1);
+        }
         if (!in_array($address["zip"], $_validZips)) {
-            throw new Exception("We currently only support ".implode( ",", $_validZips ), 1);
+            throw new Exception("We currently only support " . implode(",", $_validZips), 1);
         }
     }
 
-    private static function validateCoordinates($coordinates){       
+    private static function validateCoordinates($coordinates)
+    {
         $_southNorthBorders = [52.58,  52.5933];
         $_eastWestBorders = [13.3466, 13.375];
         $longitude = $coordinates["longitude"];
@@ -110,14 +117,7 @@ class ReportParser
         $valid = $longitude >= $_southNorthBorders[0] && $longitude <= $_southNorthBorders[1] && $latitude >= $_eastWestBorders[0] && $latitude <= $_eastWestBorders[1];
         
         if (!$valid) {
-            throw new Exception("We currently only support Wilhelmsruh. It looks like you're out of its boundaries", 1); }
+            throw new Exception("We currently only support Wilhelmsruh. It looks like you're out of its boundaries", 1);
         }
-
-    private static function getCoordinatesForAddress($address){
-        throw new Exception("Not implemented", 1);        
-    }
-
-    private static function getAddressForCoordinates($coordinates){
-        throw new Exception("Not implemented", 1);        
     }
 }
