@@ -6,7 +6,7 @@ use Exception;
 
 class LocationService
 {
-    const locationServer = "https://nominatim.openstreetmap.org/";
+    const locationServer = "http://nominatim.openstreetmap.org/";
 
     public static function getCoordinatesForAddress($address)
     {
@@ -24,7 +24,7 @@ class LocationService
         $curlClient = curl_init();
 
         echo self::locationServer.$query."\n";
- 
+
         //Set the URL that you want to GET by using the CURLOPT_URL option.
         curl_setopt($curlClient, CURLOPT_URL, self::locationServer.$query);
 
@@ -34,14 +34,16 @@ class LocationService
         //Set CURLOPT_FOLLOWLOCATION to true to follow redirects.
         curl_setopt($curlClient, CURLOPT_FOLLOWLOCATION, true);
 
-        $headers = [            
-            'User-Agent: PostmanRuntime/7.23.0'
-        ];
-        
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_REFERER, 'https://www.wilhelm-gibt-keine-ruh.de/');
+
+        curl_setopt($ch, CURLOPT_USERAGENT, "Curl");
 
         //Execute the request.
         $response = curl_exec($curlClient);
+
+        if(curl_error($curlClient)) {
+            throw new Exception(curl_error($curlClient), 1);
+        }
 
         echo $response."\n";
 
