@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Report
+ * ReportLocation
  *
  * PHP version 7.1
  *
@@ -19,49 +19,33 @@ namespace OpenAPIServer\Model;
 use OpenAPIServer\Interfaces\ModelInterface;
 
 /**
- * Report
+ * ReportLocation
  *
  * @package OpenAPIServer\Model
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
-class Report implements ModelInterface
+class ReportLocation implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "location", "reporter", "stink", "time" ],
-  "type" : "object",
+  "required" : [ "coordinates" ],
   "properties" : {
-    "time" : {
-      "type" : "string",
-      "format" : "datetime",
-      "example" : "2020-03-10T12:00:00Z"
+    "address" : {
+      "$ref" : "#/components/schemas/address"
     },
-    "location" : {
-      "$ref" : "#/components/schemas/report_location"
-    },
-    "stink" : {
-      "$ref" : "#/components/schemas/stink"
-    },
-    "reporter" : {
-      "$ref" : "#/components/schemas/reporter"
+    "coordinates" : {
+      "$ref" : "#/components/schemas/coordinates"
     }
-  },
-  "description" : "The report of a notable stink event"
+  }
 }
 SCHEMA;
 
-    /** @var string $time */
-    private $time;
+    /** @var \OpenAPIServer\Model\Address $address */
+    private $address;
 
-    /** @var \OpenAPIServer\Model\ReportLocation $location */
-    private $location;
-
-    /** @var \OpenAPIServer\Model\Stink $stink */
-    private $stink;
-
-    /** @var \OpenAPIServer\Model\Reporter $reporter */
-    private $reporter;
+    /** @var \OpenAPIServer\Model\Coordinates $coordinates */
+    private $coordinates;
 
     /**
      * Returns model schema.

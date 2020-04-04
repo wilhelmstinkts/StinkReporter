@@ -137,6 +137,7 @@ Class | Method | HTTP request | Description
 * OpenAPIServer\Model\Coordinates
 * OpenAPIServer\Model\InlineObject
 * OpenAPIServer\Model\Report
+* OpenAPIServer\Model\ReportLocation
 * OpenAPIServer\Model\Reporter
 * OpenAPIServer\Model\Stink
 

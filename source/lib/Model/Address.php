@@ -29,7 +29,7 @@ class Address implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "city", "number", "street", "zip" ],
+  "required" : [ "city", "country", "number", "street", "zip" ],
   "type" : "object",
   "properties" : {
     "street" : {
