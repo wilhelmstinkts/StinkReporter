@@ -66,9 +66,13 @@ components:
           example: "2020-03-10T12:00:00Z"
         location:
           type: object
-          anyOf:
-            - $ref: "#/components/schemas/address"
-            - $ref: "#/components/schemas/coordinates"
+          properties:
+            address:
+              $ref: "#/components/schemas/address"
+            coordinates:
+              $ref: "#/components/schemas/coordinates"
+          required: 
+            - coordinates
         stink:
           $ref: "#/components/schemas/stink"
         reporter:
