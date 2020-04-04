@@ -84,7 +84,7 @@ stages:
     response:
       status_code: 400
 
-  - name: Address outside Wilhelmsruh
+  - name: Missing coordinates
     request:
       url: http://localhost:8080/api/v0/report
       method: POST
