@@ -9,23 +9,23 @@ class MailServiceTest extends TestCase
 {    
     public function testFormatWithoutAddress()
     {
-        $report = (object) array(
+        $report = array (
             'time' => '2020-03-10T12:00:00Z',
             'location' =>
-            (object) array(
+            array (
             'coordinates' =>
-            (object) array(
+            array (
             'longitude' => 52.58412,
             'latitude' => 13.36086,
             ),
             ),
             'stink' =>
-            (object) array(
+            array (
             'kind' => 'Biomüll',
             'intensity' => 3,
             ),
             'reporter' =>
-            (object) array(
+            array (
             'name' => 'Jane Doe',
             'email' => 'jane.doe@provider.org',
             ),

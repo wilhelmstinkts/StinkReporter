@@ -24,7 +24,7 @@ class ReportParser
         ReportParser::throwOnMissingProps($reporterSchema, $report["reporter"]);
 
         $location = ReportParser::parseLocation($report["location"]);
-        return (object) $report;
+        return $report;
     }
 
     private static function throwOnMissingProps(array $schema, $given)
