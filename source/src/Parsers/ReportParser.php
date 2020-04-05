@@ -6,7 +6,6 @@ use Exception;
 use DateTime;
 use DateTimeInterface;
 use OpenAPIServer\Model;
-use OpenAPIServer\Services;
 
 class ReportParser
 {
@@ -25,7 +24,7 @@ class ReportParser
         ReportParser::throwOnMissingProps($reporterSchema, $report["reporter"]);
 
         $location = ReportParser::parseLocation($report["location"]);
-        return $location;
+        return $report;
     }
 
     private static function throwOnMissingProps(array $schema, $given)
@@ -62,30 +61,17 @@ class ReportParser
         $address = $location["address"];
         $coordinates = $location["coordinates"];
         $hasAddress = !\is_null($address);
-        $hasCoordinates = !\is_null($coordinates);
-        if (!($hasAddress || $hasCoordinates)) {
-            throw new Exception("You must provide an address or coordinates", 1);
-        }
-
+        
         if ($hasAddress) {
             $addressSchema = \OpenAPIServer\Model\Address::getOpenApiSchema(true);
-            ReportParser::throwOnMissingProps($addressSchema, $address);
             ReportParser::validateAddress($address);
         }
 
-        if ($hasCoordinates) {
-            $coordinateSchema = \OpenAPIServer\Model\Coordinates::getOpenApiSchema(true);
-            ReportParser::throwOnMissingProps($coordinateSchema, $coordinates);
-            ReportParser::validateCoordinates($coordinates);
-        }
-
-        if ($hasAddress && !$hasCoordinates) {
-            $coordinates = \OpenAPIServer\Services\LocationService::getCoordinatesForAddress($address);
-        }
-
-        if (!$hasAddress && $hasCoordinates) {
-            $address = \OpenAPIServer\Services\LocationService::getAddressForCoordinates($coordinates);
-        }
+        
+        $coordinateSchema = \OpenAPIServer\Model\Coordinates::getOpenApiSchema(true);
+        ReportParser::throwOnMissingProps($coordinateSchema, $coordinates);
+        ReportParser::validateCoordinates($coordinates);
+        
 
         return [ "address" => $address, "coordinates" => $coordinates ];
     }
