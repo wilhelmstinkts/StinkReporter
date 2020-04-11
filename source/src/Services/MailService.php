@@ -6,6 +6,7 @@ use Exception;
 use DateTime;
 use DateTimeInterface;
 use OpenAPIServer\Model;
+use OpenAPIServer\DTOs;
 
 class MailService
 {
@@ -14,19 +15,19 @@ class MailService
         $mailText = MailService::formatText($report);
     }
 
-    public static function formatText(array $report)
+    public static function formatText(\OpenApiServer\DTOs\Report $report) : string
     {
-        $intensity = $report['stink']['intensity'];
-        $longitude = $report['location']['coordinates']['longitude'];
+        $numberFormatter = new \NumberFormatter("de-DE", \NumberFormatter::DECIMAL);
+        $numberFormatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 5);
         $text = <<<EOD
         <p>Sehr geehrte Damen und Herren,</p>
         <p>Hiermit zeige ich – mit der Bitte um Weiterverfolgung durch Ihr Amt – folgende Geruchsbelästigung an:</p>
-        <p>Geruchsstärke: $intensity/5<br />
+        <p>Geruchsstärke: {$report->stink->intensity}/5<br />
         mit Belästigung: ja</p>
         <table>
             <tr>
                 <td>Ort:</td>
-                <td>Breitengrad: $longitude&#730; n.B.</td>                
+                <td>Breitengrad: {$numberFormatter->format($report->location->coordinates->longitude)}&#730; n.B.</td>
             </tr>
             <tr>
                 <td></td>

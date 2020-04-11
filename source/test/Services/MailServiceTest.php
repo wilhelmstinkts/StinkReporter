@@ -4,32 +4,18 @@ namespace OpenAPIServer\Api;
 
 use PHPUnit\Framework\TestCase;
 use OpenAPIServer\Services;
+use OpenAPIServer\DTOs;
 
 class MailServiceTest extends TestCase
 {    
     public function testFormatWithoutAddress()
     {
-        $report = array (
-            'time' => '2020-03-10T12:00:00Z',
-            'location' =>
-            array (
-            'coordinates' =>
-            array (
-            'longitude' => 52.58412,
-            'latitude' => 13.36086,
-            ),
-            ),
-            'stink' =>
-            array (
-            'kind' => 'Biomüll',
-            'intensity' => 3,
-            ),
-            'reporter' =>
-            array (
-            'name' => 'Jane Doe',
-            'email' => 'jane.doe@provider.org',
-            ),
-        );
+        $time = \DateTime::createFromFormat(\DateTimeInterface::ISO8601, '2020-03-10T12:00:00Z', new \DateTimeZone('UTC'));
+        $coordinates = new \OpenAPIServer\DTOs\Coordinates(52.58412, 13.36086);
+        $location = new \OpenAPIServer\DTOs\Location(null, $coordinates);
+        $stink = new \OpenAPIServer\DTOs\Stink('Biomüll', 3);
+        $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
+        $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $reporter);
 
         $expectedMessage=<<<'EOD'
         <p>Sehr geehrte Damen und Herren,</p>
@@ -39,7 +25,7 @@ class MailServiceTest extends TestCase
         <table>
             <tr>
                 <td>Ort:</td>
-                <td>Breitengrad: 52,58412&#730; n.B.</td>                
+                <td>Breitengrad: 52,58412&#730; n.B.</td>
             </tr>
             <tr>
                 <td></td>
