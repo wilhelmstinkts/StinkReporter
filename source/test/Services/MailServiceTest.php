@@ -29,7 +29,7 @@ class MailServiceTest extends TestCase
             </tr>
             <tr>
                 <td></td>
-                <td>Längengrad: 13.36086&#730; ö.L.</td>
+                <td>Längengrad: 13,36086&#730; ö.L.</td>
             </tr>
             <tr>
                 <td>Geruchsart:</td>
@@ -43,7 +43,7 @@ class MailServiceTest extends TestCase
         <p>Danke, dass Sie sich durch Weiterverfolgung oben angezeigter Geruchsbelästigung für mehr Lebensqualität, saubere Luft und eine bessere Stadt einsetzen!</p>
         <p>Für etwaige Gerichtsverhandlungen stehe ich als Zeuge zur Verfügung. Meine oben gemachten Angaben einschließlich meiner Personalien sind zutreffend und vollständig (§ 111 OWiG). Mir ist bewusst, dass ich als Zeugin oder Zeuge zur wahrheitsgemäßen Aussage (§ 57 und § 3 161a StPO i. V. m § 46 OWiG) und auch zu einem möglichen Erscheinen vor Gericht verpflichtet bin. Vorsätzlich falsche Angaben zu angeblichen Ordnungswidrigkeiten können eine Straftat sein.</p>
         <p>Mit freundlichen Grüßen</p>
-        <p>Jane Doe <br />
+        <p>Jane Doe<br />
         jane.doe@provider.org</p>
         EOD;
 
