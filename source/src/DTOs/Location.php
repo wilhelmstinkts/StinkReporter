@@ -3,10 +3,10 @@
 namespace OpenAPIServer\DTOs;
 
 class Location{    
-     public ?Address $adress;
+     public ?Address $address;
      public Coordinates $coordinates;
     
-     public function __construct(?Adress $address, Coordinates $coordinates) {
+     public function __construct(?Address $address, Coordinates $coordinates) {
         $this->address = $address;
         $this->coordinates = $coordinates;
     }

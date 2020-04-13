@@ -35,13 +35,27 @@ class MailService
                 <td></td>
                 <td>Längengrad: {$numberFormatter->format($report->location->coordinates->latitude)}&#730; ö.L.</td>
             </tr>
+        EOD;
+
+        if (!is_null($report->location->address)) {
+            $address = $report->location->address;
+            $text .= <<<EOD
+            <tr>
+                <td></td>
+                <td>{$address->street} {$address->number}<br />
+                {$address->zip} {$address->city}</td>
+            </tr>
+            EOD;
+        }
+
+        $text .= <<<EOD
             <tr>
                 <td>Geruchsart:</td>
                 <td>{$report->stink->kind}</td>
             </tr>
             <tr>
                 <td>Zeit:</td>
-                <td>{$berlinTime->format('d.m.Y H:i:s')} Uhr</td>
+                <td>{$berlinTime->format('d.m.Y H:i')} Uhr</td>
             </tr>
         </table>
         <p>Danke, dass Sie sich durch Weiterverfolgung oben angezeigter Geruchsbelästigung für mehr Lebensqualität, saubere Luft und eine bessere Stadt einsetzen!</p>
