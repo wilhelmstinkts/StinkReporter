@@ -34,7 +34,8 @@ class ReportApi extends AbstractReportApi
                 throw new Exception("Request body is invalid json or empty", 1);
             }
             $report = \OpenAPIServer\Parsers\ReportParser::parseBodyToReport($requestBody);
-            $html = var_export($report, true);
+            $success = \OpenAPIServer\Services\MailService::sendMail($report);
+            $html = var_export($success, true);
             $response->getBody()->write($html);
             
             return $response->withStatus(201);

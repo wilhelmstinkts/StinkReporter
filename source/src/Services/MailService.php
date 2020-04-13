@@ -13,6 +13,13 @@ class MailService
     public static function sendMail(object $report)
     {
         $mailText = MailService::formatText($report);
+        $to = "";
+        $subject = "Anzeige Geruchsbelästigung";
+        $from = "From: {$report->reporter->name} <{$report->reporter->email}>\r\n";
+        $from .= "Reply-To: {$report->reporter->email} \r\n";
+        $from .= "Content-Type: text/html\r\n";
+        return mail($to, $subject, $mailText, $from);
+
     }
 
     public static function formatText(\OpenApiServer\DTOs\Report $report) : string
