@@ -19,7 +19,7 @@ class MailService
         $from .= "Reply-To: {$report->reporter->email} \r\n";
         $from .= "Content-Type: text/html\r\n";
         $mailToSenateSuccess =  mail($to, $subject, $mailText, $from);
-        $mailToReporterSuccess =  sendCc($report);
+        $mailToReporterSuccess =  MailService::sendCc($report);
         return $mailToSenateSuccess && $mailToReporterSuccess;
     }
 

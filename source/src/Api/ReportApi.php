@@ -18,7 +18,7 @@ use OpenAPIServer\Parsers;
  * @link    https://github.com/openapitools/openapi-generator
  */
 class ReportApi extends AbstractReportApi
-{
+{    
 
     public function getReports(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
@@ -34,10 +34,12 @@ class ReportApi extends AbstractReportApi
                 throw new Exception("Request body is invalid json or empty", 1);
             }
             $report = \OpenAPIServer\Parsers\ReportParser::parseBodyToReport($requestBody);
-            $success = \OpenAPIServer\Services\MailService::sendMail($report);
-            $html = var_export($success, true);
-            $response->getBody()->write($html);
-            
+            $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
+            if (!$mailSuccess) {
+                $response->getBody()->write("Mail could not be sent");           
+                return $response->withStatus(500);
+            }
+            $response->getBody()->write("Successfully ingested report");
             return $response->withStatus(201);
         } catch (Exception $e) {
             $response->getBody()->write($e->getMessage());
