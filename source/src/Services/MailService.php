@@ -10,7 +10,7 @@ use OpenAPIServer\DTOs;
 
 class MailService
 {
-    public static function sendMail(object $report)
+    public static function sendMail(\OpenAPIServer\DTOs\Report $report)
     {
         $mailText = MailService::formatText($report);
         $to = "";
@@ -18,8 +18,24 @@ class MailService
         $from = "From: {$report->reporter->name} <{$report->reporter->email}>\r\n";
         $from .= "Reply-To: {$report->reporter->email} \r\n";
         $from .= "Content-Type: text/html\r\n";
-        return mail($to, $subject, $mailText, $from);
+        $mailToSenateSuccess =  mail($to, $subject, $mailText, $from);
+        $mailToReporterSuccess =  sendCc($report);
+        return $mailToSenateSuccess && $mailToReporterSuccess;
+    }
 
+    public static function sendCc(\OpenAPIServer\DTOs\Report $report)
+    {
+        $mailText = <<<EOD
+        <p>Hallo {$report->reporter->name},</p>
+        <p>danke, dass du dich für saubere Luft im Kiez einsetzt! Wir haben in deinem Namen unten stehende Email an den Senat gesendet.</p>
+        <hr />
+        EOD;
+        $mailText .=  MailService::formatText($report);
+        $subject = "Danke für deine Gestank-Meldung";
+        $from = "From: Wilhelm Gibt Keine Ruh <no-reply@wilhelm-gibt-keine-ruh.de>\r\n";
+        $from .= "Reply-To: <no-reply@wilhelm-gibt-keine-ruh.de> \r\n";
+        $from .= "Content-Type: text/html\r\n";
+        return mail($report->reporter->email, $subject, $mailText, $from);
     }
 
     public static function formatText(\OpenApiServer\DTOs\Report $report) : string
