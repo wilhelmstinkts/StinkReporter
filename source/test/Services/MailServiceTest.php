@@ -49,6 +49,10 @@ class MailServiceTest extends TestCase
         EOD;
 
         $generatedMessage = \OpenAPIServer\Services\MailService::formatText($report);
+        $generatedMessage = preg_replace( "/\r|\n/", "", $generatedMessage);
+        $generatedMessage = str_replace( "    ", "", $generatedMessage);
+        $expectedMessage = preg_replace( "/\r|\n/", "", $expectedMessage);
+        $expectedMessage = str_replace( "    ", "", $expectedMessage);
         $this->assertEquals($expectedMessage, $generatedMessage);
     }
 
@@ -98,7 +102,10 @@ class MailServiceTest extends TestCase
         EOD;
 
         $generatedMessage = \OpenAPIServer\Services\MailService::formatText($report);
-
+        $generatedMessage = preg_replace( "/\r|\n/", "", $generatedMessage);
+        $generatedMessage = str_replace( "    ", "", $generatedMessage);
+        $expectedMessage = preg_replace( "/\r|\n/", "", $expectedMessage);
+        $expectedMessage = str_replace( "    ", "", $expectedMessage);
         $this->assertEquals($expectedMessage, $generatedMessage);
     }
 }

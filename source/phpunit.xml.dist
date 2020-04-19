@@ -20,6 +20,9 @@
         <testsuite name="Mock">
             <directory>./test/Mock</directory>
         </testsuite>
+        <testsuite name="Services">
+            <directory>./test/Services</directory>
+        </testsuite>
         <testsuite name="Utils">
             <directory>./test/Utils</directory>
         </testsuite>
