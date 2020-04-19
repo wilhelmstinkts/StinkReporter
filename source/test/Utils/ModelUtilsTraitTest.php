@@ -31,15 +31,15 @@ use PHPUnit\Framework\TestCase;
 /**
  * ModelUtilsTraitTest Class Doc Comment
  *
- * @package OpenAPIServer\Utils
- * @author  OpenAPI Generator team
- * @link    https://github.com/openapitools/openapi-generator
+ * @package            OpenAPIServer\Utils
+ * @author             OpenAPI Generator team
+ * @link               https://github.com/openapitools/openapi-generator
  * @coversDefaultClass \OpenAPIServer\Utils\ModelUtilsTrait
  */
 class ModelUtilsTraitTest extends TestCase
 {
     /**
-     * @covers ::getSimpleRef
+     * @covers       ::getSimpleRef
      * @dataProvider provideRefs
      */
     public function testGetSimpleRef($ref, $expectedRef)
@@ -72,7 +72,7 @@ class ModelUtilsTraitTest extends TestCase
     }
 
     /**
-     * @covers ::toModelName
+     * @covers       ::toModelName
      * @dataProvider provideModelNames
      */
     public function testToModelName($name, $prefix, $suffix, $expectedModel)

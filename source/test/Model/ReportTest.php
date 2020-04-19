@@ -106,6 +106,7 @@ class ReportTest extends TestCase
 
     /**
      * Test getOpenApiSchema static method
+     *
      * @covers ::getOpenApiSchema
      */
     public function testGetOpenApiSchema()

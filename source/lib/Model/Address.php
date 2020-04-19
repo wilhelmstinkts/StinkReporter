@@ -56,19 +56,29 @@ class Address implements ModelInterface
 }
 SCHEMA;
 
-    /** @var string $street */
+    /**
+     * @var string $street
+     */
     private $street;
 
-    /** @var string $number */
+    /**
+     * @var string $number
+     */
     private $number;
 
-    /** @var string $zip */
+    /**
+     * @var string $zip
+     */
     private $zip;
 
-    /** @var string $city */
+    /**
+     * @var string $city
+     */
     private $city;
 
-    /** @var string $country */
+    /**
+     * @var string $country
+     */
     private $country;
 
     /**

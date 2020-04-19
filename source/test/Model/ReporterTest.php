@@ -92,6 +92,7 @@ class ReporterTest extends TestCase
 
     /**
      * Test getOpenApiSchema static method
+     *
      * @covers ::getOpenApiSchema
      */
     public function testGetOpenApiSchema()

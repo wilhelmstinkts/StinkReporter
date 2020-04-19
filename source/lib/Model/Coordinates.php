@@ -48,10 +48,14 @@ class Coordinates implements ModelInterface
 }
 SCHEMA;
 
-    /** @var float $longitude */
+    /**
+     * @var float $longitude
+     */
     private $longitude;
 
-    /** @var float $latitude */
+    /**
+     * @var float $latitude
+     */
     private $latitude;
 
     /**

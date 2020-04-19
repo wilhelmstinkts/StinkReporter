@@ -62,11 +62,15 @@ trait StringUtilsTrait
 
         // Uppercase the class name.
         $p = '/(\.?)(\w)([^\.]*)$/';
-        $word = preg_replace_callback($p, function ($matches) {
-            $rep = $matches[1] . strtoupper($matches[2]) . $matches[3];
-            $rep = preg_replace('/\$/', '\\\$', $rep);
-            return $rep;
-        }, $word);
+        $word = preg_replace_callback(
+            $p,
+            function ($matches) {
+                $rep = $matches[1] . strtoupper($matches[2]) . $matches[3];
+                $rep = preg_replace('/\$/', '\\\$', $rep);
+                return $rep;
+            },
+            $word
+        );
 
         // Remove all underscores (underscore_case to camelCase)
         $p = '/(_)(.)/';

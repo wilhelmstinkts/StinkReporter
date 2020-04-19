@@ -51,16 +51,24 @@ class Report implements ModelInterface
 }
 SCHEMA;
 
-    /** @var string $time */
+    /**
+     * @var string $time
+     */
     private $time;
 
-    /** @var \OpenAPIServer\Model\ReportLocation $location */
+    /**
+     * @var \OpenAPIServer\Model\ReportLocation $location
+     */
     private $location;
 
-    /** @var \OpenAPIServer\Model\Stink $stink */
+    /**
+     * @var \OpenAPIServer\Model\Stink $stink
+     */
     private $stink;
 
-    /** @var \OpenAPIServer\Model\Reporter $reporter */
+    /**
+     * @var \OpenAPIServer\Model\Reporter $reporter
+     */
     private $reporter;
 
     /**

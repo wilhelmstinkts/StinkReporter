@@ -92,6 +92,7 @@ class StinkTest extends TestCase
 
     /**
      * Test getOpenApiSchema static method
+     *
      * @covers ::getOpenApiSchema
      */
     public function testGetOpenApiSchema()

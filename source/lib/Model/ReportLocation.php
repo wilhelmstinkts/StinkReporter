@@ -41,10 +41,14 @@ class ReportLocation implements ModelInterface
 }
 SCHEMA;
 
-    /** @var \OpenAPIServer\Model\Address $address */
+    /**
+     * @var \OpenAPIServer\Model\Address $address
+     */
     private $address;
 
-    /** @var \OpenAPIServer\Model\Coordinates $coordinates */
+    /**
+     * @var \OpenAPIServer\Model\Coordinates $coordinates
+     */
     private $coordinates;
 
     /**

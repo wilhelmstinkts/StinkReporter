@@ -45,10 +45,14 @@ use Exception;
 class SlimRouter
 {
 
-    /** @var App instance */
+    /**
+     * @var App instance
+     */
     private $slimApp;
 
-    /** @var array[] list of all api operations */
+    /**
+     * @var array[] list of all api operations
+     */
     private $operations = [
         [
             'httpMethod' => 'GET',

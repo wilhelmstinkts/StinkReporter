@@ -10,7 +10,7 @@ use OpenAPIServer\DTOs;
 
 class ReportParser
 {
-    public static function parseBodyToReport(array $body) : \OpenAPIServer\DTOs\Report
+    public static function parseBodyToReport(array $body): \OpenAPIServer\DTOs\Report
     {
         if (is_null($body["report"])) {
             throw new Exception("Missing object report in the request body", 1);
@@ -41,7 +41,7 @@ class ReportParser
         }
     }
 
-    private static function parseTime(string $timeString) : DateTime
+    private static function parseTime(string $timeString): DateTime
     {
         $time = DateTime::createFromFormat(DateTimeInterface::ISO8601, $timeString);
         if ($time == false) {
@@ -50,21 +50,21 @@ class ReportParser
         return $time;
     }
 
-    private static function parseStink(array $stink) : \OpenAPIServer\DTOs\Stink
+    private static function parseStink(array $stink): \OpenAPIServer\DTOs\Stink
     {
         $stinkSchema = \OpenAPIServer\Model\Stink::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($stinkSchema, $stink);
         return new  \OpenAPIServer\DTOs\Stink($stink["kind"], $stink["intensity"]);
     }
 
-    private static function parseReporter(array $reporter) : \OpenAPIServer\DTOs\Reporter
+    private static function parseReporter(array $reporter): \OpenAPIServer\DTOs\Reporter
     {
         $reporterSchema = \OpenAPIServer\Model\Reporter::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reporterSchema, $reporter);
         return new  \OpenAPIServer\DTOs\Reporter($reporter["name"], $reporter["email"]);
     }
 
-    private static function parseLocation($location) : \OpenAPIServer\DTOs\Location
+    private static function parseLocation($location): \OpenAPIServer\DTOs\Location
     {
         if (!is_array($location)) {
             $type = gettype($location);
@@ -87,7 +87,7 @@ class ReportParser
         return new \OpenAPIServer\DTOs\Location($address, $coordinates);
     }
 
-    private static function parseAndValidateAddress($address) : \OpenAPIServer\DTOs\Address
+    private static function parseAndValidateAddress($address): \OpenAPIServer\DTOs\Address
     {
         $_validStates = ["Germany"];
         $_validCities = ["Berlin"];
@@ -105,10 +105,9 @@ class ReportParser
         }
 
         return new \OpenAPIServer\DTOs\Address($address["street"], $address["number"], $address["zip"], $address["city"], $address["country"]);
-
     }
 
-    private static function parseAndValidateCoordinates($coordinates) : \OpenAPIServer\DTOs\Coordinates
+    private static function parseAndValidateCoordinates($coordinates): \OpenAPIServer\DTOs\Coordinates
     {
         $_southNorthBorders = [52.58,  52.5933];
         $_eastWestBorders = [13.3466, 13.375];

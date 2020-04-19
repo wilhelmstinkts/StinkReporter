@@ -7,7 +7,8 @@ use OpenAPIServer\Services;
 use OpenAPIServer\DTOs;
 
 class MailServiceTest extends TestCase
-{    
+{
+    
     public function testFormatWithoutAddressWintertime()
     {
         $time = \DateTime::createFromFormat(\DateTimeInterface::ISO8601, '2020-03-10T12:00:00Z', new \DateTimeZone('UTC'));
@@ -17,7 +18,7 @@ class MailServiceTest extends TestCase
         $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
         $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $reporter);
 
-        $expectedMessage=<<<'EOD'
+        $expectedMessage = <<<'EOD'
         <p>Sehr geehrte Damen und Herren,</p>
         <p>Hiermit zeige ich – mit der Bitte um Weiterverfolgung durch Ihr Amt – folgende Geruchsbelästigung an:</p>
         <p>Geruchsstärke: 3/5<br />
@@ -61,7 +62,7 @@ class MailServiceTest extends TestCase
         $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
         $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $reporter);
 
-        $expectedMessage=<<<'EOD'
+        $expectedMessage = <<<'EOD'
         <p>Sehr geehrte Damen und Herren,</p>
         <p>Hiermit zeige ich – mit der Bitte um Weiterverfolgung durch Ihr Amt – folgende Geruchsbelästigung an:</p>
         <p>Geruchsstärke: 3/5<br />

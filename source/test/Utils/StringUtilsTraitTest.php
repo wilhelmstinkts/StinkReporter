@@ -31,15 +31,15 @@ use PHPUnit\Framework\TestCase;
 /**
  * StringUtilsTraitTest Class Doc Comment
  *
- * @package OpenAPIServer\Utils
- * @author  OpenAPI Generator team
- * @link    https://github.com/openapitools/openapi-generator
+ * @package            OpenAPIServer\Utils
+ * @author             OpenAPI Generator team
+ * @link               https://github.com/openapitools/openapi-generator
  * @coversDefaultClass \OpenAPIServer\Utils\StringUtilsTrait
  */
 class StringUtilsTraitTest extends TestCase
 {
     /**
-     * @covers ::camelize
+     * @covers       ::camelize
      * @dataProvider provideWordsForCamelizeTest
      */
     public function testCamelize($word, $lowercaseFirstLetter, $expectedWord)
@@ -71,7 +71,7 @@ class StringUtilsTraitTest extends TestCase
     }
 
     /**
-     * @covers ::isReservedWord
+     * @covers       ::isReservedWord
      * @dataProvider provideWordsForIsReservedTest
      */
     public function testisReservedWord($word, $expected)

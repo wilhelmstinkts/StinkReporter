@@ -38,7 +38,7 @@ class MailService
         return mail($report->reporter->email, $subject, $mailText, $from);
     }
 
-    public static function formatText(\OpenApiServer\DTOs\Report $report) : string
+    public static function formatText(\OpenApiServer\DTOs\Report $report): string
     {
         $numberFormatter = new \NumberFormatter("de-DE", \NumberFormatter::DECIMAL);
         $numberFormatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 5);

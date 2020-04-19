@@ -6,7 +6,6 @@ use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use OpenAPIServer\Model;
 use OpenAPIServer\Parsers;
 
@@ -18,7 +17,8 @@ use OpenAPIServer\Parsers;
  * @link    https://github.com/openapitools/openapi-generator
  */
 class ReportApi extends AbstractReportApi
-{    
+{
+    
 
     public function getReports(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
@@ -36,7 +36,7 @@ class ReportApi extends AbstractReportApi
             $report = \OpenAPIServer\Parsers\ReportParser::parseBodyToReport($requestBody);
             $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
             if (!$mailSuccess) {
-                $response->getBody()->write("Mail could not be sent");           
+                $response->getBody()->write("Mail could not be sent");
                 return $response->withStatus(500);
             }
             $response->getBody()->write("Successfully ingested report");

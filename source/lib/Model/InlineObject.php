@@ -42,10 +42,14 @@ class InlineObject implements ModelInterface
 }
 SCHEMA;
 
-    /** @var \OpenAPIServer\Model\Report $report */
+    /**
+     * @var \OpenAPIServer\Model\Report $report
+     */
     private $report;
 
-    /** @var string $captchaToken The token assigned by the captcha provider*/
+    /**
+     * @var string $captchaToken The token assigned by the captcha provider
+     */
     private $captchaToken;
 
     /**
