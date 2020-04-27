@@ -69,7 +69,8 @@ CREATE TABLE IF NOT EXISTS `reports` (
 CREATE TABLE IF NOT EXISTS `stink_kinds` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` text COLLATE latin1_german1_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
