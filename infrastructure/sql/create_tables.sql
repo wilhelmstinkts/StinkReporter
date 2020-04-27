@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS `stink_kinds` (
 -- Constraints der Tabelle `reports`
 --
 ALTER TABLE `reports`
-  ADD CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`),
-  ADD CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`stink_kind_id`) REFERENCES `stink_kinds` (`id`);
+  ADD CONSTRAINT `fk_reports_location` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`),
+  ADD CONSTRAINT `fk_reports_stink_kind` FOREIGN KEY (`stink_kind_id`) REFERENCES `stink_kinds` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
