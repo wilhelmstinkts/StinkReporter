@@ -33,11 +33,11 @@ USE `stink_db`;
 CREATE TABLE IF NOT EXISTS `locations` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `coordinates` point NOT NULL,
-  `street` mediumtext COLLATE latin1_german1_ci NOT NULL,
-  `number` tinytext COLLATE latin1_german1_ci NOT NULL,
-  `zip` tinytext COLLATE latin1_german1_ci NOT NULL,
-  `city` tinytext COLLATE latin1_german1_ci NOT NULL,
-  `country` tinytext COLLATE latin1_german1_ci NOT NULL,
+  `street` mediumtext COLLATE latin1_german1_ci,
+  `number` tinytext COLLATE latin1_german1_ci,
+  `zip` tinytext COLLATE latin1_german1_ci,
+  `city` tinytext COLLATE latin1_german1_ci,
+  `country` tinytext COLLATE latin1_german1_ci,
   PRIMARY KEY (`id`),
   KEY `coordinates` (`coordinates`(25))
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
