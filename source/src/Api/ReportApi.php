@@ -35,7 +35,7 @@ class ReportApi extends AbstractReportApi
             }
             $report = \OpenAPIServer\Parsers\ReportParser::parseBodyToReport($requestBody);
 
-            $reportRepo = new \OpenAPIServer\Repositories\ReportRepository('mysql:dbname=stink_db;host=172.17.0.2', "root", "totallyunsafe");
+            $reportRepo = \Environment\Environment::reportRepository();
             $reportRepo->saveReport($report);
 
             $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
