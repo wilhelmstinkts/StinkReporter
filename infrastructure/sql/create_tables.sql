@@ -87,3 +87,52 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE InsertReport(
+    IN report_time datetime,
+    IN stink_kind text,
+    IN intensity tinyint,
+    IN insert_coordinates point,
+    IN street mediumtext,
+    IN street_number tinytext,
+    IN zip tinytext,
+    IN city tinytext,
+    IN country tinytext)
+BEGIN
+    DECLARE matching_stink_count int DEFAULT 0;
+    DECLARE stink_id int DEFAULT 0;
+    DECLARE matching_coordinates_count int DEFAULT 0;
+    DECLARE location_id int DEFAULT 0;
+
+    SELECT COUNT(*) 
+    INTO matching_stink_count
+    FROM stink_kinds
+    WHERE name = stink_kind;
+
+    IF matching_stink_count > 0 THEN
+        SELECT id INTO stink_id FROM stink_kinds WHERE name = stink_kind;
+    ELSE
+        INSERT INTO stink_kinds (name) VALUES (stink_kind);
+        SELECT LAST_INSERT_ID() INTO stink_id;
+    END IF;
+
+    SELECT COUNT(*) 
+    INTO matching_coordinates_count
+    FROM locations
+    WHERE coordinates = insert_coordinates;
+
+    IF matching_coordinates_count > 0 THEN
+        SELECT id INTO location_id FROM locations WHERE coordinates = insert_coordinates;
+    ELSE
+        INSERT INTO locations (coordinates, street, number, zip, city, country) VALUES (insert_coordinates, street, street_number, zip, city, country);
+        SELECT LAST_INSERT_ID() INTO location_id;
+    END IF;
+
+    INSERT INTO reports (location_id, stink_kind_id, intensity, time) VALUES (location_id, stink_id, intensity, report_time);
+
+END$$
+
+DELIMITER ;
