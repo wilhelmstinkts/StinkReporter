@@ -13,7 +13,7 @@ class MailService
     public static function sendMail(\OpenAPIServer\DTOs\Report $report)
     {
         $mailText = MailService::formatText($report);
-        $to = "";
+        $to = \Environment\Environment::mailReceivers();
         $subject = "Anzeige Geruchsbelästigung";
         $from = "From: {$report->reporter->name} <{$report->reporter->email}>\r\n";
         $from .= "Reply-To: {$report->reporter->email} \r\n";
