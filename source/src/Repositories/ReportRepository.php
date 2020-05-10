@@ -18,9 +18,9 @@ class ReportRepository
     }
 
     public function saveReport(\OpenAPIServer\DTOs\Report $report)
-    {           
+    {
         $sql = "CALL InsertReport(:time, :stinkKind, :intensity, ST_GeomFromText(:coordinates, 4326), :street, :number, :zip, :city, :country)";
-        $statement = $this->pdo->prepare($sql);        
+        $statement = $this->pdo->prepare($sql);
         $success = $statement->execute(array(
             ':time' =>  $report->time->format("Y-m-d H:i:s"),
             ':stinkKind' => $report->stink->kind,
@@ -33,8 +33,7 @@ class ReportRepository
             ':country' => $report->location->address->country
         ));
         if (!$success) {
-
-            throw new Exception("Error while writing report to database.", 1);            
+            throw new Exception("Error while writing report to database.", 1);
         }
     }
 }
