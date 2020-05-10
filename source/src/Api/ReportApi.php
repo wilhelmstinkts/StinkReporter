@@ -34,11 +34,16 @@ class ReportApi extends AbstractReportApi
                 throw new Exception("Request body is invalid json or empty", 1);
             }
             $report = \OpenAPIServer\Parsers\ReportParser::parseBodyToReport($requestBody);
+
+            $reportRepo = new \OpenAPIServer\Repositories\ReportRepository('mysql:dbname=stink_db;host=172.17.0.2', "root", "totallyunsafe");
+            $reportRepo->saveReport($report);
+
             $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
             if (!$mailSuccess) {
                 $response->getBody()->write("Mail could not be sent");
                 return $response->withStatus(500);
             }
+            
             $response->getBody()->write("Successfully ingested report");
             return $response->withStatus(201);
         } catch (Exception $e) {
