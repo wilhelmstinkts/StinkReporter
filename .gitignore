@@ -1,2 +1,4 @@
 **/vendor/**
 **/.pytest_cache/**
+**/.venv
+**/.vscode

@@ -39,24 +39,18 @@ stages:
       method: GET
     response:
       status_code: 200
-      body:
-        [0]:
-          report:
-            time: "2020-03-10T12:00:00Z"
-            location:
-              coordinates:
-                longitude: 52.587516
-                latitude: 13.362886
-              adress:
-                street: "Garibaldistraße"
-                number: "7A"
-                zip: "13158"
-                city: "Berlin"
-                country: "Germany"
-            stink:
-              kind: "Biomüll"
-              intensity: 3
-            reporter:
-              name: "Jane Doe"
-              email: "jane.doe@provider.org"
-
+      json:
+        - time: "2020-03-10T12:00:00+0000"
+          location:
+            coordinates:
+              longitude: 52.587516
+              latitude: 13.362886
+            address:
+              street: "Garibaldistraße"
+              number: "7A"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
