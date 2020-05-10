@@ -23,7 +23,7 @@ class ReportApi extends AbstractReportApi
     public function getReports(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $reportRepo = \Environment\Environment::reportRepository();
-        $reports = $reportRepo->getReports();        
+        $reports = $reportRepo->getReports();
         $response->getBody()->write(json_encode($reports));
         return $response->withStatus(200)->withHeader('content-type', 'application/json');
     }
@@ -40,7 +40,7 @@ class ReportApi extends AbstractReportApi
             $reportRepo = \Environment\Environment::reportRepository();
             $reportRepo->saveReport($report);
 
-            if (!\Environment\Environment::skipMail()) {                
+            if (!\Environment\Environment::skipMail()) {
                 $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
                 if (!$mailSuccess) {
                     $response->getBody()->write("Mail could not be sent");

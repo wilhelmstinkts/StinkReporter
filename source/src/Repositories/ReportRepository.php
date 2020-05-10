@@ -12,7 +12,8 @@ class ReportRepository
 {
     private \PDO $pdo;
 
-    private static function dateFormat():string{
+    private static function dateFormat():string
+    {
         return "Y-m-d H:i:s";
     }
 
@@ -53,7 +54,7 @@ class ReportRepository
         EOD;
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
-        $arrayResult=$statement->fetchAll();
+        $arrayResult = $statement->fetchAll();
         $reports = array();
         foreach ($arrayResult as $key => $value) {
             array_push($reports, ReportRepository::toReport($value));
@@ -64,10 +65,10 @@ class ReportRepository
     private static function toReport(array $inputArray):\OpenAPIServer\DTOs\Report
     {
         $address = new \OpenAPIServer\DTOs\Address(
-            $inputArray["street"], 
-            $inputArray["number"], 
-            $inputArray["zip"], 
-            $inputArray["city"], 
+            $inputArray["street"],
+            $inputArray["number"],
+            $inputArray["zip"],
+            $inputArray["city"],
             $inputArray["country"]
         );
 
@@ -92,7 +93,7 @@ class ReportRepository
             $location,
             $datetime,
             $stink,
-            null        
+            null
         );
     }
 }
