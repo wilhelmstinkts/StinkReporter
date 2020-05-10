@@ -12,7 +12,7 @@ class ReportRepository
 {
     private \PDO $pdo;
 
-    private static function dateFormat():string
+    private static function dateFormat(): string
     {
         return "Y-m-d H:i:s";
     }
@@ -62,7 +62,7 @@ class ReportRepository
         return $reports;
     }
 
-    private static function toReport(array $inputArray):\OpenAPIServer\DTOs\Report
+    private static function toReport(array $inputArray): \OpenAPIServer\DTOs\Report
     {
         $address = new \OpenAPIServer\DTOs\Address(
             $inputArray["street"],
