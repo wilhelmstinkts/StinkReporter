@@ -36,4 +36,19 @@ class ReportRepository
             throw new Exception("Error while writing report to database.", 1);
         }
     }
+
+    public function getReports()
+    {
+        $sql = <<<EOD
+        SELECT reports.time, reports.intensity, stink_kinds.name as stink_kind, ST_AsText(locations.coordinates) as coordinates, 
+        locations.street, locations.number, locations.zip, locations.city, locations.country
+        FROM reports
+        INNER JOIN locations ON reports.location_id=locations.id
+        INNER JOIN stink_kinds ON reports.stink_kind_id=stink_kinds.id;
+        EOD;
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute();
+        $arrayResult=$statement->fetchAll();
+        return $arrayResult;
+    }    
 }

@@ -10,6 +10,11 @@ class Environment
         return new \OpenAPIServer\Repositories\ReportRepository("mysql:dbname=stink_db;host=172.17.0.2", "root", "totallyunsafe");
     }
 
+    public static function skipMail(): bool
+    {
+        return true;
+    }
+
     public static function mailReceivers(): string
     {
         return "";

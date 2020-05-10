@@ -22,8 +22,10 @@ class ReportApi extends AbstractReportApi
 
     public function getReports(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $response->getBody()->write("I am a stub");
-        return $response->withStatus(400);
+        $reportRepo = \Environment\Environment::reportRepository();
+        $reports = $reportRepo->getReports();        
+        $response->getBody()->write(json_encode($reports));
+        return $response->withStatus(200)->withHeader('content-type', 'application/json');
     }
 
     public function postNewReport(ServerRequestInterface $request, ResponseInterface $response, array $args)
@@ -38,10 +40,12 @@ class ReportApi extends AbstractReportApi
             $reportRepo = \Environment\Environment::reportRepository();
             $reportRepo->saveReport($report);
 
-            $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
-            if (!$mailSuccess) {
-                $response->getBody()->write("Mail could not be sent");
-                return $response->withStatus(500);
+            if (!\Environment\Environment::skipMail()) {                
+                $mailSuccess = \OpenAPIServer\Services\MailService::sendMail($report);
+                if (!$mailSuccess) {
+                    $response->getBody()->write("Mail could not be sent");
+                    return $response->withStatus(500);
+                }
             }
             
             $response->getBody()->write("Successfully ingested report");
