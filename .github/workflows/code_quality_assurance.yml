@@ -26,9 +26,8 @@ jobs:
       working-directory: ./utils
       run: |
             chmod +x ./start-my-sql-in-docker.sh
-            chmod +x ./create-tables.sh
             ./start-my-sql-in-docker.sh
-            ./create-tables.sh
+            docker exec mysql mysql -uroot -ptotallyunsafe --execute="\. /commands/create_tables.sql"
     - name: Prepare Api Tests
       working-directory: ./apitests
       run: |
