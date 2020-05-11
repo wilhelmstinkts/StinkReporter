@@ -25,6 +25,8 @@ jobs:
     - name: Prepare Database
       working-directory: ./utils
       run: |
+            chmod +x ./start-my-sql-in-docker.sh
+            chmod +x ./create-tables.sh
             ./start-my-sql-in-docker.sh
             ./create-tables.sh
     - name: Prepare Api Tests
