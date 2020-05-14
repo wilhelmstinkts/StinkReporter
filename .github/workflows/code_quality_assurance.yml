@@ -18,23 +18,3 @@ jobs:
     - name: Linting
       working-directory: ./source
       run: composer phpcs
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-    - name: Prepare Database
-      working-directory: ./utils
-      run: |
-            chmod +x ./start-my-sql-in-docker.sh
-            ./start-my-sql-in-docker.sh
-            docker exec mysql mysql -uroot -ptotallyunsafe --execute="\. /commands/create_tables.sql"
-    - name: Prepare Api Tests
-      working-directory: ./apitests
-      run: |
-            sudo apt-get install dos2unix
-            dos2unix ./*
-            chmod +x ./run-api-tests.sh
-            pip install tavern
-    - name: Run Api Tests
-      working-directory: ./apitests
-      run: ./run-api-tests.sh
