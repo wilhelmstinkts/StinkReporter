@@ -1,0 +1,172 @@
+test_name: Client errors
+
+stages:
+  - name: Missing request body
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+    response:
+      status_code: 400
+
+  - name: Missing report
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        falseKey: 5
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Missing time
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          location:
+            street: "Garibaldistraße"
+            number: "7A"
+            zip: "13158"
+            city: "Berlin"
+            country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Invalid time
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "Not a time string"
+          location:
+            street: "Garibaldistraße"
+            number: "7A"
+            zip: "13158"
+            city: "Berlin"
+            country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Missing location
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2000-01-01T12:00:00Z"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Missing coordinates
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2000-01-01T12:00:00Z"
+          location:
+            street: "Kriemhildstraße"
+            number: "2-18"
+            zip: "33615"
+            city: "Bielefeld"
+            country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Coordinates outside Wilhelmsruh
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2000-01-01T12:00:00Z"
+          location:
+            longitude: 58.8004358
+            latitude: 5.7053571
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Missing stink
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2000-01-01T12:00:00Z"
+          location:
+            street: "Garibaldistraße"
+            number: "7A"
+            zip: "13158"
+            city: "Berlin"
+            country: "Germany"
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Missing reporter
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2000-01-01T12:00:00Z"
+          location:
+            street: "Garibaldistraße"
+            number: "7A"
+            zip: "13158"
+            city: "Berlin"
+            country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
