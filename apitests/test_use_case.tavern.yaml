@@ -1,0 +1,56 @@
+test_name: Happy path
+stages:
+  - name: When there are no reports stored, return empty array
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: GET
+    response:
+      status_code: 200
+
+  - name: Post a report
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2020-03-10T12:00:00Z"
+          location:
+            coordinates:
+              longitude: 52.587516
+              latitude: 13.362886
+            address:
+              street: "Garibaldistraße"
+              number: "7A"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+    response:
+      status_code: 201
+
+  - name: Get previously stored entry
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: GET
+    response:
+      status_code: 200
+      json:
+        - time: "2020-03-10T12:00:00+0000"
+          location:
+            coordinates:
+              longitude: 52.587516
+              latitude: 13.362886
+            address:
+              street: "Garibaldistraße"
+              number: "7A"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
