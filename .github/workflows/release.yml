@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  test:
+   runs-on: ubuntu-latest       
+   steps:
+    - name: Checkout head
+      uses: actions/checkout@v2
+    - name: Install requirements
+      working-directory: ./source
+      run: composer update --no-dev --no-scripts
+    - name: Delete unit tests
+      working-directory: ./source
+      run: rm -r ./test
+    - name: Delete test environment settings
+      working-directory: ./source
+      run: rm ./env.php
+    - name: Upload ftp
+      uses: sebastianpopp/ftp-action@releases/v2
+      with:
+        host: ${{ secrets.FTP_SERVER }}
+        user: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        localDir: "source"
+        remoteDir: "api"
