@@ -43,7 +43,7 @@ class ReportParser
 
     private static function parseTime(string $timeString): DateTime
     {
-        $time = DateTime::createFromFormat(DateTimeInterface::ISO8601, $timeString);
+        $time = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $timeString);
         if ($time == false) {
             throw new Exception("$timeString is not a valid time", 1);
         }

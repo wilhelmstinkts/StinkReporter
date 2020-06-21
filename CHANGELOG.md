@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.1] - 2020-06-21
+### Fixed
+- Allow milliseconds in timestamps
+
 ## [0.0.0] - 2020-05-26
 ### Added
 - Endpoint to post a stink report
