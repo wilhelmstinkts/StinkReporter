@@ -43,6 +43,7 @@ class ReportParser
 
     private static function parseTime(string $timeString): DateTime
     {
+
         $time = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $timeString);
         if ($time == false) {
             throw new Exception("$timeString is not a valid time", 1);
@@ -113,6 +114,7 @@ class ReportParser
         $_eastWestBorders = [13.3466, 13.375];
         $longitude = $coordinates["longitude"];
         $latitude = $coordinates["latitude"];
+
         $valid = $longitude >= $_eastWestBorders[0] && $longitude <= $_eastWestBorders[1] && $latitude >= $_southNorthBorders[0] && $latitude <= $_southNorthBorders[1];
         
         if (!$valid) {
