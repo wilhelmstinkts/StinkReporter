@@ -33,9 +33,10 @@ class WeatherService
 
     public static function parseApiResponse(string $apiResponse)
     {
-        return new \OpenAPIServer\DTOs\Wind(50, 80, 90);
-
-        // ["wind"];
-        // return new \OpenAPIServer\DTOs\Wind($wind["direction"], $wind["speed"], $wind["gust"]);
+        $wind = json_decode($apiResponse, true)["wind"];
+        if (array_key_exists("gust", $wind)) {
+            return new \OpenAPIServer\DTOs\Wind($wind["deg"], $wind["speed"], $wind["gust"]);
+        }
+        return new \OpenAPIServer\DTOs\Wind($wind["deg"], $wind["speed"], null);
     }
 }
