@@ -13,7 +13,6 @@ stages:
       method: POST
       json:
         report:
-          time: "2020-03-10T12:00:00.000Z"
           location:
             coordinates:
               latitude: 52.587516
@@ -40,8 +39,7 @@ stages:
     response:
       status_code: 200
       json:
-        - time: "2020-03-10T12:00:00+0000"
-          location:
+        - location:
             coordinates:
               latitude: 52.587516
               longitude: 13.362886
