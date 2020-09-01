@@ -21,7 +21,7 @@ class ReportParser
         ReportParser::throwOnMissingProps($reportSchema, $report);
         $location = ReportParser::parseLocation($report["location"]);
         $wind = new Wind(50, 1, 3);
-        $time = new DateTime("now");
+        $time = new DateTime("now", new \DateTimeZone("UTC"));
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
         return new \OpenAPIServer\DTOs\Report($location, $time, $stink, $wind, $reporter);

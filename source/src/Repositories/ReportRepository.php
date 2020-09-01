@@ -48,8 +48,8 @@ class ReportRepository
     public function getReports(): array
     {
         $sql = <<<EOD
-        SELECT 
-            reports.time, 
+        SELECT
+            reports.time,
             reports.intensity,
             reports.wind_direction,
             reports.wind_speed,
@@ -62,11 +62,11 @@ class ReportRepository
             locations.zip,
             locations.city,
             locations.country
-        FROM 
+        FROM
             reports
-        INNER JOIN 
+        INNER JOIN
             locations ON reports.location_id=locations.id
-        INNER JOIN 
+        INNER JOIN
             stink_kinds ON reports.stink_kind_id=stink_kinds.id;
         EOD;
         $statement = $this->pdo->prepare($sql);
