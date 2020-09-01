@@ -81,7 +81,9 @@ COMMIT;
 ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */
 ;
-DELIMITER $$ CREATE PROCEDURE InsertReport(
+
+DELIMITER $$
+CREATE PROCEDURE InsertReport(
   IN report_time datetime,
   IN stink_kind text,
   IN intensity tinyint,
@@ -93,7 +95,7 @@ DELIMITER $$ CREATE PROCEDURE InsertReport(
   IN country tinytext,
   IN wind_direction decimal,
   IN wind_speed decimal,
-  IN wind_gust_speed decimal,
+  IN wind_gust_speed decimal
 ) BEGIN
 DECLARE matching_stink_count int DEFAULT 0;
 DECLARE stink_id int DEFAULT 0;
@@ -148,4 +150,5 @@ VALUES (
     wind_speed,
     wind_gust_speed
   );
-END $$ DELIMITER;
+END $$
+DELIMITER ;
