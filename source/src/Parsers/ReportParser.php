@@ -8,6 +8,7 @@ use DateTimeInterface;
 use OpenAPIServer\Model;
 use OpenAPIServer\DTOs;
 use OpenAPIServer\DTOs\Wind;
+use OpenAPIServer\Services\WeatherService;
 
 class ReportParser
 {
@@ -20,7 +21,8 @@ class ReportParser
         $reportSchema = \OpenAPIServer\Model\ReportInput::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reportSchema, $report);
         $location = ReportParser::parseLocation($report["location"]);
-        $wind = new Wind(50, 1, 3);
+        $weatherService = \Environment\Environment::weatherService();
+        $wind = $weatherService->getWind($location->coordinates);
         $time = new DateTime("now", new \DateTimeZone("UTC"));
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
