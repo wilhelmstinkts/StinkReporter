@@ -41,7 +41,6 @@ trait ModelUtilsTrait
 
     /**
      * Parses model class name from provided ref.
-     *
      * @link https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#reference-object
      * This method doesn't check that class exists and autoloaded.
      * This is recreated method of @link modules/openapi-generator/src/main/java/org/openapitools/codegen/utils/ModelUtils.java class.

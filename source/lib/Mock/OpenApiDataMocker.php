@@ -44,7 +44,6 @@ final class OpenApiDataMocker implements IMocker
 
     /**
      * Mocks OpenApi Data.
-     *
      * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#data-types
      *
      * @param $dataType   string     OpenApi data type. Use constants from OpenApiDataMockerInterface class
@@ -89,19 +88,14 @@ final class OpenApiDataMocker implements IMocker
                 $required = $options['required'] ?? null;
                 return $this->mockObject($properties, $minProperties, $maxProperties, $additionalProperties, $required);
             default:
-                throw new InvalidArgumentException(
-                    '"dataType" must be one of ' . implode(
-                        ', ',
-                        [
-                        IMocker::DATA_TYPE_INTEGER,
-                        IMocker::DATA_TYPE_NUMBER,
-                        IMocker::DATA_TYPE_STRING,
-                        IMocker::DATA_TYPE_BOOLEAN,
-                        IMocker::DATA_TYPE_ARRAY,
-                        IMocker::DATA_TYPE_OBJECT,
-                        ]
-                    )
-                );
+                throw new InvalidArgumentException('"dataType" must be one of ' . implode(', ', [
+                    IMocker::DATA_TYPE_INTEGER,
+                    IMocker::DATA_TYPE_NUMBER,
+                    IMocker::DATA_TYPE_STRING,
+                    IMocker::DATA_TYPE_BOOLEAN,
+                    IMocker::DATA_TYPE_ARRAY,
+                    IMocker::DATA_TYPE_OBJECT,
+                ]));
         }
     }
 
@@ -177,9 +171,9 @@ final class OpenApiDataMocker implements IMocker
      * @param int|null    $minLength  (optional) Default is 0
      * @param int|null    $maxLength  (optional) Default is 100 chars
      * @param array       $enum       (optional) This array should have at least one element.
-     *                                Elements in the array should be unique.
+     * Elements in the array should be unique.
      * @param string|null $pattern    (optional) This string should be a valid regular expression, according to the ECMA 262 regular expression dialect.
-     *                                Recall: regular expressions are not implicitly anchored.
+     * Recall: regular expressions are not implicitly anchored.
      *
      * @throws \InvalidArgumentException when invalid arguments passed
      *
@@ -277,13 +271,13 @@ final class OpenApiDataMocker implements IMocker
             case IMocker::DATA_FORMAT_PASSWORD:
                 // use list of most popular passwords
                 $obviousPassList = [
-                'qwerty',
-                'qwerty12345',
-                'hello',
-                '12345',
-                '0000',
-                'qwerty12345!',
-                'qwertyuiop[]',
+                    'qwerty',
+                    'qwerty12345',
+                    'hello',
+                    '12345',
+                    '0000',
+                    'qwerty12345!',
+                    'qwertyuiop[]',
                 ];
                 $str = $obviousPassList[mt_rand(0, count($obviousPassList) - 1)];
 
@@ -300,11 +294,11 @@ final class OpenApiDataMocker implements IMocker
             case IMocker::DATA_FORMAT_EMAIL:
                 // just for visionary purpose, not related to real persons
                 $fakeEmailList = [
-                'johndoe',
-                'lhoswald',
-                'ojsimpson',
-                'mlking',
-                'jfkennedy',
+                    'johndoe',
+                    'lhoswald',
+                    'ojsimpson',
+                    'mlking',
+                    'jfkennedy',
                 ];
                 $str = $fakeEmailList[mt_rand(0, count($fakeEmailList) - 1)] . '@example.com';
 
@@ -399,10 +393,10 @@ final class OpenApiDataMocker implements IMocker
      * @param int|null               $minProperties        (optional) An object instance is valid against "minProperties" if its number of properties is greater than, or equal to, the value of this keyword.
      * @param int|null               $maxProperties        (optional) An object instance is valid against "maxProperties" if its number of properties is less than, or equal to, the value of this keyword.
      * @param bool|object|array|null $additionalProperties (optional) If "additionalProperties" is true, validation always succeeds.
-     *                                                     If "additionalProperties" is false, validation succeeds only if the instance is an object and all properties on the instance were covered by "properties" and/or "patternProperties".
-     *                                                     If "additionalProperties" is an object, validate the value as a schema to all of the properties that weren't validated by "properties" nor "patternProperties".
+     * If "additionalProperties" is false, validation succeeds only if the instance is an object and all properties on the instance were covered by "properties" and/or "patternProperties".
+     * If "additionalProperties" is an object, validate the value as a schema to all of the properties that weren't validated by "properties" nor "patternProperties".
      * @param array|null             $required             (optional) This array MUST have at least one element.  Elements of this array must be strings, and MUST be unique.
-     *                                                     An object instance is valid if its property set contains all elements in this array value.
+     * An object instance is valid if its property set contains all elements in this array value.
      *
      * @throws \InvalidArgumentException when invalid arguments passed
      *
@@ -510,13 +504,11 @@ final class OpenApiDataMocker implements IMocker
             $modelName = static::toModelName($refName);
             $modelClass = 'OpenAPIServer\Model\\' . $modelName;
             if (!class_exists($modelClass) || !method_exists($modelClass, 'getOpenApiSchema')) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Model %s not found or method %s doesn\'t exist',
-                        $modelClass,
-                        $modelClass . '::getOpenApiSchema'
-                    )
-                );
+                throw new InvalidArgumentException(sprintf(
+                    'Model %s not found or method %s doesn\'t exist',
+                    $modelClass,
+                    $modelClass . '::getOpenApiSchema'
+                ));
             }
             $data = $this->mockFromSchema($modelClass::getOpenApiSchema(true));
         }
@@ -525,7 +517,7 @@ final class OpenApiDataMocker implements IMocker
     }
 
     /**
-     * @internal           Extract OAS properties from array or object.
+     * @internal Extract OAS properties from array or object.
      * @codeCoverageIgnore
      *
      * @param array|object $val Processed array or object
