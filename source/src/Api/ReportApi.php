@@ -18,7 +18,7 @@ use OpenAPIServer\Parsers;
  */
 class ReportApi extends AbstractReportApi
 {
-    
+
 
     public function getReports(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
@@ -47,7 +47,7 @@ class ReportApi extends AbstractReportApi
                     return $response->withStatus(500);
                 }
             }
-            
+
             $response->getBody()->write("Successfully ingested report");
             return $response->withStatus(201);
         } catch (Exception $e) {

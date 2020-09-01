@@ -17,7 +17,7 @@ class ReportParser
             throw new Exception("Missing object report in the request body", 1);
         }
         $report = $body["report"];
-        $reportSchema = \OpenAPIServer\Model\Report::getOpenApiSchema(true);
+        $reportSchema = \OpenAPIServer\Model\ReportInput::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reportSchema, $report);
         $location = ReportParser::parseLocation($report["location"]);
         $wind = new Wind(50, 1, 3);
