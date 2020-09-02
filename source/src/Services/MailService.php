@@ -44,6 +44,7 @@ class MailService
         $numberFormatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 5);
         $berlinTime = $report->time->setTimezone(new \DateTimeZone('Europe/Berlin'));
         $coordinates = $report->location->coordinates;
+        $temperatureCelsius = $report->weather->temperature - 273.15;
 
         $text = <<<EOD
         <p>Sehr geehrte Damen und Herren,</p>
@@ -57,6 +58,7 @@ class MailService
                     <th rowspan=2>Geruchsintensität</th>
                     <th colspan=2>Ort</th>
                     <th colspan=3>Wind</th>
+                    <th rowspan=2>Temperatur</th>
                 </tr>
                 <tr>                    
                     <th>Adresse</th>
@@ -89,16 +91,17 @@ class MailService
             EOD;
 
         $text .= <<<EOD
-                    <td>{$report->wind->direction}°</td>
-                    <td>{$report->wind->speed} m/s</td>
+                    <td>{$report->weather->wind->direction}°</td>
+                    <td>{$report->weather->wind->speed} m/s</td>
         EOD;
-        if (!is_null($report->wind->gustSpeed)) {
-            $text .= "<td>{$report->wind->gustSpeed} m/s</td>";
+        if (!is_null($report->weather->wind->gustSpeed)) {
+            $text .= "<td>{$report->weather->wind->gustSpeed} m/s</td>";
         } else {
             $text .= "<td></td>";
         }
 
         $text .= <<<EOD
+                    <td>{$temperatureCelsius}° C</td>
                 </tr>
             </tbody>
         </table>

@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
   `location_id` int(10) UNSIGNED NOT NULL,
   `stink_kind_id` int(10) UNSIGNED NOT NULL,
   `intensity` tinyint(3) UNSIGNED NOT NULL,
+  `temperature` DECIMAL(5, 2) NOT NULL,
   `wind_direction` DECIMAL(5, 2) NOT NULL,
   `wind_speed` DECIMAL(5, 2) NOT NULL,
   `wind_gust_speed` DECIMAL(5, 2),
@@ -93,6 +94,7 @@ CREATE PROCEDURE InsertReport(
   IN zip tinytext,
   IN city tinytext,
   IN country tinytext,
+  IN temperature decimal,
   IN wind_direction decimal,
   IN wind_speed decimal,
   IN wind_gust_speed decimal
@@ -137,6 +139,7 @@ INSERT INTO reports (
     stink_kind_id,
     intensity,
     time,
+    temperature,
     wind_direction,
     wind_speed,
     wind_gust_speed
@@ -146,6 +149,7 @@ VALUES (
     stink_id,
     intensity,
     report_time,
+    temperature,
     wind_direction,
     wind_speed,
     wind_gust_speed
