@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Get Wind data from openWeatherMap and attach to the report
+- Get weather data from openWeatherMap and attach to the report
 
 ### Changed
 
