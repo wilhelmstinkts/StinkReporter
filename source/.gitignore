@@ -10,8 +10,7 @@ composer.lock
 # phplint tool creates cache file which is not necessary in a codebase
 /.phplint-cache
 
-# Do not commit local PHPUnit config
-/phpunit.xml
+# Do not commit local PHPUnit results
 /.phpunit.result.cache
 
 # Do not commit local PHP_CodeSniffer config

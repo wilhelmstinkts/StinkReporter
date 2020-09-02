@@ -38,6 +38,7 @@ stages:
       method: GET
     response:
       status_code: 200
+      strict: no
       json:
         - location:
             coordinates:
