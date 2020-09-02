@@ -46,6 +46,8 @@ Command | Target
 `$ composer test` | All tests
 `$ composer test-apis` | Apis tests
 `$ composer test-models` | Models tests
+`$ composer test-mock` | Mock feature tests
+`$ composer test-utils` | Utils tests
 
 #### Config
 
@@ -99,6 +101,8 @@ Switch on option in `./index.php`:
 +++ $app->addErrorMiddleware(true, true, true);
 ```
 
+## [Mock Server Documentation](./docs/MockServer.md)
+
 ## API Endpoints
 
 All URIs are relative to *https://hierstinkts.wilhelm-gibt-keine-ruh.de/api*
@@ -134,11 +138,15 @@ Class | Method | HTTP request | Description
 ## Models
 
 * OpenAPIServer\Model\Address
+* OpenAPIServer\Model\BaseReport
+* OpenAPIServer\Model\BaseReportLocation
 * OpenAPIServer\Model\Coordinates
 * OpenAPIServer\Model\InlineObject
-* OpenAPIServer\Model\Report
-* OpenAPIServer\Model\ReportLocation
+* OpenAPIServer\Model\ReportInput
+* OpenAPIServer\Model\ReportOutput
 * OpenAPIServer\Model\Reporter
 * OpenAPIServer\Model\Stink
+* OpenAPIServer\Model\Weather
+* OpenAPIServer\Model\Wind
 
 

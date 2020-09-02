@@ -7,6 +7,8 @@ use DateTime;
 use DateTimeInterface;
 use OpenAPIServer\Model;
 use OpenAPIServer\DTOs;
+use OpenAPIServer\DTOs\Wind;
+use OpenAPIServer\Services\WeatherService;
 
 class ReportParser
 {
@@ -16,13 +18,15 @@ class ReportParser
             throw new Exception("Missing object report in the request body", 1);
         }
         $report = $body["report"];
-        $reportSchema = \OpenAPIServer\Model\Report::getOpenApiSchema(true);
+        $reportSchema = \OpenAPIServer\Model\ReportInput::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reportSchema, $report);
-        $time = ReportParser::parseTime($report["time"]);
+        $location = ReportParser::parseLocation($report["location"]);
+        $weatherService = \Environment\Environment::weatherService();
+        $weather = $weatherService->getWeather($location->coordinates);
+        $time = new DateTime("now", new \DateTimeZone("UTC"));
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
-        $location = ReportParser::parseLocation($report["location"]);
-        return new \OpenAPIServer\DTOs\Report($location, $time, $stink, $reporter);
+        return new \OpenAPIServer\DTOs\Report($location, $time, $stink, $weather, $reporter);
     }
 
     private static function throwOnMissingProps(array $schema, $given)
@@ -39,16 +43,6 @@ class ReportParser
                 }
             }
         }
-    }
-
-    private static function parseTime(string $timeString): DateTime
-    {
-
-        $time = DateTime::createFromFormat('Y-m-d\TH:i:s.uO', $timeString);
-        if ($time == false) {
-            throw new Exception("$timeString is not a valid time", 1);
-        }
-        return $time;
     }
 
     private static function parseStink(array $stink): \OpenAPIServer\DTOs\Stink
@@ -75,12 +69,12 @@ class ReportParser
         $adressArray = $location["address"];
         $coordinatesArray = $location["coordinates"];
         $hasAddress = !\is_null($adressArray);
-        
+
         if ($hasAddress) {
             $address = ReportParser::parseAndValidateAddress($adressArray);
         }
 
-        
+
         $coordinateSchema = \OpenAPIServer\Model\Coordinates::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($coordinateSchema, $coordinatesArray);
         $coordinates = ReportParser::parseAndvalidateCoordinates($coordinatesArray);
@@ -116,7 +110,7 @@ class ReportParser
         $latitude = $coordinates["latitude"];
 
         $valid = $longitude >= $_eastWestBorders[0] && $longitude <= $_eastWestBorders[1] && $latitude >= $_southNorthBorders[0] && $latitude <= $_southNorthBorders[1];
-        
+
         if (!$valid) {
             throw new Exception("We currently only support Wilhelmsruh. It looks like you're out of its boundaries", 1);
         }

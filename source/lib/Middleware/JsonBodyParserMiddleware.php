@@ -43,7 +43,6 @@ final class JsonBodyParserMiddleware implements MiddlewareInterface
     /**
      * Parse incoming JSON input into a native PHP format
      * Copied from Slim4 guide
-     *
      * @ref https://www.slimframework.com/docs/v4/objects/request.html#the-request-body
      *
      * @param ServerRequestInterface  $request HTTP request

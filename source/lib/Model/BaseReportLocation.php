@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Coordinates
+ * BaseReportLocation
  *
  * PHP version 7.1
  *
@@ -19,40 +19,33 @@ namespace OpenAPIServer\Model;
 use OpenAPIServer\Interfaces\ModelInterface;
 
 /**
- * Coordinates
+ * BaseReportLocation
  *
  * @package OpenAPIServer\Model
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
-class Coordinates implements ModelInterface
+class BaseReportLocation implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "latitude", "longitude" ],
-  "type" : "object",
+  "required" : [ "coordinates" ],
   "properties" : {
-    "longitude" : {
-      "maximum" : 90,
-      "minimum" : -90,
-      "type" : "number",
-      "example" : 40.1234567
+    "address" : {
+      "$ref" : "#/components/schemas/address"
     },
-    "latitude" : {
-      "maximum" : 180,
-      "minimum" : -180,
-      "type" : "number",
-      "example" : -40.1234567
+    "coordinates" : {
+      "$ref" : "#/components/schemas/coordinates"
     }
   }
 }
 SCHEMA;
 
-    /** @var float $longitude */
-    private $longitude;
+    /** @var \OpenAPIServer\Model\Address $address */
+    private $address;
 
-    /** @var float $latitude */
-    private $latitude;
+    /** @var \OpenAPIServer\Model\Coordinates $coordinates */
+    private $coordinates;
 
     /**
      * Returns model schema.

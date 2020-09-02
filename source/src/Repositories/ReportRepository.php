@@ -24,7 +24,7 @@ class ReportRepository
 
     public function saveReport(\OpenAPIServer\DTOs\Report $report)
     {
-        $sql = "CALL InsertReport(:time, :stinkKind, :intensity, ST_GeomFromText(:coordinates, 4326), :street, :number, :zip, :city, :country)";
+        $sql = "CALL InsertReport(:time, :stinkKind, :intensity, ST_GeomFromText(:coordinates, 4326), :street, :number, :zip, :city, :country, :temperature, :windDirection, :windSpeed, :windGustSpeed)";
         $statement = $this->pdo->prepare($sql);
         $success = $statement->execute(array(
             ':time' =>  $report->time->format(ReportRepository::dateFormat()),
@@ -35,7 +35,11 @@ class ReportRepository
             ':number' => $report->location->address->number,
             ':zip' => $report->location->address->zip,
             ':city' => $report->location->address->city,
-            ':country' => $report->location->address->country
+            ':country' => $report->location->address->country,
+            ':temperature' => $report->weather->temperature,
+            ':windDirection' => $report->weather->wind->direction,
+            ':windSpeed' => $report->weather->wind->speed,
+            ':windGustSpeed' => $report->weather->wind->gustSpeed
         ));
         if (!$success) {
             throw new Exception("Error while writing report to database.", 1);
@@ -45,12 +49,27 @@ class ReportRepository
     public function getReports(): array
     {
         $sql = <<<EOD
-        SELECT reports.time, reports.intensity, stink_kinds.name as stink_kind,
-        ST_X(locations.coordinates) as latitude, ST_Y(locations.coordinates) as longitude,
-        locations.street, locations.number, locations.zip, locations.city, locations.country
-        FROM reports
-        INNER JOIN locations ON reports.location_id=locations.id
-        INNER JOIN stink_kinds ON reports.stink_kind_id=stink_kinds.id;
+        SELECT
+            reports.time,
+            reports.intensity,
+            reports.temperature,
+            reports.wind_direction,
+            reports.wind_speed,
+            reports.wind_gust_speed,
+            stink_kinds.name as stink_kind,
+            ST_X(locations.coordinates) as latitude,
+            ST_Y(locations.coordinates) as longitude,
+            locations.street,
+            locations.number,
+            locations.zip,
+            locations.city,
+            locations.country
+        FROM
+            reports
+        INNER JOIN
+            locations ON reports.location_id=locations.id
+        INNER JOIN
+            stink_kinds ON reports.stink_kind_id=stink_kinds.id;
         EOD;
         $statement = $this->pdo->prepare($sql);
         $statement->execute();
@@ -87,12 +106,24 @@ class ReportRepository
             $inputArray["intensity"]
         );
 
+        $wind = new \OpenAPIServer\DTOs\Wind(
+            $inputArray["wind_direction"],
+            $inputArray["wind_speed"],
+            $inputArray["wind_gust_speed"]
+        );
+
+        $weather = new \OpenAPIServer\DTOs\Weather(
+            $inputArray["temperature"],
+            $wind
+        );
+
         $datetime =  \DateTime::createFromFormat(ReportRepository::dateFormat(), $inputArray["time"], new \DateTimeZone("UTC"));
 
         return new \OpenAPIServer\DTOs\Report(
             $location,
             $datetime,
             $stink,
+            $weather,
             null
         );
     }

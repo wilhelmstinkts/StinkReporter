@@ -32,7 +32,7 @@ class InlineObject implements ModelInterface
   "type" : "object",
   "properties" : {
     "report" : {
-      "$ref" : "#/components/schemas/report"
+      "$ref" : "#/components/schemas/reportInput"
     },
     "captchaToken" : {
       "type" : "string",
@@ -42,14 +42,10 @@ class InlineObject implements ModelInterface
 }
 SCHEMA;
 
-    /**
-     * @var \OpenAPIServer\Model\Report $report
-     */
+    /** @var \OpenAPIServer\Model\ReportInput $report */
     private $report;
 
-    /**
-     * @var string $captchaToken The token assigned by the captcha provider
-     */
+    /** @var string $captchaToken The token assigned by the captcha provider*/
     private $captchaToken;
 
     /**

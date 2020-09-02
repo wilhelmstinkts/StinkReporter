@@ -46,14 +46,10 @@ class Stink implements ModelInterface
 }
 SCHEMA;
 
-    /**
-     * @var string $kind
-     */
+    /** @var string $kind */
     private $kind;
 
-    /**
-     * @var float $intensity
-     */
+    /** @var float $intensity */
     private $intensity;
 
     /**

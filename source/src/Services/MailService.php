@@ -43,43 +43,67 @@ class MailService
         $numberFormatter = new \NumberFormatter("de-DE", \NumberFormatter::DECIMAL);
         $numberFormatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, 5);
         $berlinTime = $report->time->setTimezone(new \DateTimeZone('Europe/Berlin'));
+        $coordinates = $report->location->coordinates;
+        $temperatureCelsius = $report->weather->temperature - 273.15;
 
         $text = <<<EOD
         <p>Sehr geehrte Damen und Herren,</p>
         <p>Hiermit zeige ich – mit der Bitte um Weiterverfolgung durch Ihr Amt – folgende Geruchsbelästigung an:</p>
-        <p>Geruchsstärke: {$report->stink->intensity}/5<br />
-        mit Belästigung: ja</p>
         <table>
-            <tr>
-                <td>Ort:</td>
-                <td>Breitengrad: {$numberFormatter->format($report->location->coordinates->longitude)}&#730; n.B.</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>Längengrad: {$numberFormatter->format($report->location->coordinates->latitude)}&#730; ö.L.</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th rowspan=2>Datum</th>
+                    <th rowspan=2>Uhrzeit</th>
+                    <th rowspan=2>Geruchsart</th>
+                    <th rowspan=2>Geruchsintensität</th>
+                    <th colspan=2>Ort</th>
+                    <th colspan=3>Wind</th>
+                    <th rowspan=2>Temperatur</th>
+                </tr>
+                <tr>                    
+                    <th>Adresse</th>
+                    <th>Koordinaten</th>
+                    <th>Richtung</th>
+                    <th>Geschwindigkeit</th>
+                    <th>Böen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{$berlinTime->format('d.m.Y')}</td>
+                    <td>{$berlinTime->format('H:i')} Uhr</td>
+                    <td>{$report->stink->kind}</td>
+                    <td>{$report->stink->intensity}</td>
         EOD;
 
         if (!is_null($report->location->address)) {
             $address = $report->location->address;
             $text .= <<<EOD
-            <tr>
-                <td></td>
-                <td>{$address->street} {$address->number}<br />
-                {$address->zip} {$address->city}</td>
-            </tr>
+            <td>{$address->street} {$address->number}<br />
+            {$address->zip} {$address->city}</td>
             EOD;
+        } else {
+            $text .= "<td></td>";
+        }
+        $text .= <<<EOD
+            <td>{$coordinates->latitude}° Breite<br />
+            {$coordinates->longitude}° Länge</td>
+            EOD;
+
+        $text .= <<<EOD
+                    <td>{$report->weather->wind->direction}°</td>
+                    <td>{$report->weather->wind->speed} m/s</td>
+        EOD;
+        if (!is_null($report->weather->wind->gustSpeed)) {
+            $text .= "<td>{$report->weather->wind->gustSpeed} m/s</td>";
+        } else {
+            $text .= "<td></td>";
         }
 
         $text .= <<<EOD
-            <tr>
-                <td>Geruchsart:</td>
-                <td>{$report->stink->kind}</td>
-            </tr>
-            <tr>
-                <td>Zeit:</td>
-                <td>{$berlinTime->format('d.m.Y H:i')} Uhr</td>
-            </tr>
+                    <td>{$temperatureCelsius}° C</td>
+                </tr>
+            </tbody>
         </table>
         <p>Danke, dass Sie sich durch Weiterverfolgung oben angezeigter Geruchsbelästigung für mehr Lebensqualität, saubere Luft und eine bessere Stadt einsetzen!</p>
         <p>Mit freundlichen Grüßen</p>

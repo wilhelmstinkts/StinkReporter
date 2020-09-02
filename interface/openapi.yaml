@@ -26,7 +26,7 @@ paths:
               type: object
               properties:
                 report:
-                  $ref: "#/components/schemas/report"
+                  $ref: "#/components/schemas/reportInput"
                 captchaToken:
                   type: string
                   description: "The token assigned by the captcha provider"
@@ -53,17 +53,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/report"
+                  $ref: "#/components/schemas/reportOutput"
 components:
   schemas:
-    report:
+    baseReport:
       type: object
       description: "The report of a notable stink event"
       properties:
-        time:
-          type: string
-          format: datetime
-          example: "2020-03-10T12:00:00Z"
         location:
           type: object
           properties:
@@ -71,17 +67,13 @@ components:
               $ref: "#/components/schemas/address"
             coordinates:
               $ref: "#/components/schemas/coordinates"
-          required: 
+          required:
             - coordinates
         stink:
           $ref: "#/components/schemas/stink"
-        reporter:
-          $ref: "#/components/schemas/reporter"
       required:
-        - time
         - location
         - stink
-        - reporter
     address:
       type: object
       properties:
@@ -151,3 +143,52 @@ components:
       required:
         - name
         - email
+    weather:
+      type: object
+      properties:
+        temperature:
+          type: number
+          example: 270
+        wind:
+          $ref: "#/components/schemas/wind"
+      required:
+        - temperature
+        - wind
+    wind:
+      type: object
+      properties:
+        direction:
+          type: number
+          example: 270
+        speed:
+          type: number
+          example: 3.5
+        gustSpeed:
+          type: number
+          example: 12.7
+      required:
+        - direction
+        - speed
+    reportInput:
+      allOf:
+        - $ref: "#/components/schemas/baseReport"
+      type: object
+      properties:
+        reporter:
+          $ref: "#/components/schemas/reporter"
+      required:
+        - reporter
+    reportOutput:
+      allOf:
+        - $ref: "#/components/schemas/baseReport"
+      type: object
+      properties:
+        time:
+          type: string
+          format: datetime
+          example: "2020-03-10T12:00:00Z"
+        weather:
+          $ref: "#/components/schemas/weather"
+      required:
+        - time
+        - weather

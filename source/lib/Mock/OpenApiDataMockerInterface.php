@@ -2,7 +2,6 @@
 
 /**
  * OpenApiDataMockerInterface
- *
  * @ref https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#data-types
  *
  * PHP version 7.1
@@ -38,99 +37,62 @@ use InvalidArgumentException;
  */
 interface OpenApiDataMockerInterface
 {
-    /**
-     * @var string DATA_TYPE_INTEGER
-     */
+    /** @var string DATA_TYPE_INTEGER  */
     public const DATA_TYPE_INTEGER = 'integer';
 
-    /**
-     * @var string DATA_TYPE_NUMBER
-     */
+    /** @var string DATA_TYPE_NUMBER  */
     public const DATA_TYPE_NUMBER = 'number';
 
-    /**
-     * @var string DATA_TYPE_STRING
-     */
+    /** @var string DATA_TYPE_STRING */
     public const DATA_TYPE_STRING = 'string';
 
-    /**
-     * @var string DATA_TYPE_BOOLEAN
-     */
+    /** @var string DATA_TYPE_BOOLEAN */
     public const DATA_TYPE_BOOLEAN = 'boolean';
 
-    /**
-     * @var string DATA_TYPE_FILE
-     */
+    /** @var string DATA_TYPE_FILE */
     public const DATA_TYPE_FILE = 'file';
 
-    /**
-     * @var string DATA_TYPE_ARRAY
-     */
+    /** @var string DATA_TYPE_ARRAY */
     public const DATA_TYPE_ARRAY = 'array';
 
-    /**
-     * @var string DATA_TYPE_OBJECT
-     */
+    /** @var string DATA_TYPE_OBJECT */
     public const DATA_TYPE_OBJECT = 'object';
 
-    /**
-     * @var string DATA_FORMAT_INT32 Signed 32 bits
-     */
+    /** @var string DATA_FORMAT_INT32 Signed 32 bits */
     public const DATA_FORMAT_INT32 = 'int32';
 
-    /**
-     * @var string DATA_FORMAT_INT64 Signed 64 bits
-     */
+    /** @var string DATA_FORMAT_INT64 Signed 64 bits */
     public const DATA_FORMAT_INT64 = 'int64';
 
-    /**
-     * @var string DATA_FORMAT_FLOAT
-     */
+    /** @var string DATA_FORMAT_FLOAT */
     public const DATA_FORMAT_FLOAT = 'float';
 
-    /**
-     * @var string DATA_FORMAT_DOUBLE
-     */
+    /** @var string DATA_FORMAT_DOUBLE */
     public const DATA_FORMAT_DOUBLE = 'double';
 
-    /**
-     * @var string DATA_FORMAT_BYTE base64 encoded characters
-     */
+    /** @var string DATA_FORMAT_BYTE base64 encoded characters */
     public const DATA_FORMAT_BYTE = 'byte';
 
-    /**
-     * @var string DATA_FORMAT_BINARY Any sequence of octets
-     */
+    /** @var string DATA_FORMAT_BINARY Any sequence of octets */
     public const DATA_FORMAT_BINARY = 'binary';
 
-    /**
-     * @var string DATA_FORMAT_DATE As defined by full-date [RFC3339](http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14)
-     */
+    /** @var string DATA_FORMAT_DATE As defined by full-date [RFC3339](http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14) */
     public const DATA_FORMAT_DATE = 'date';
 
-    /**
-     * @var string DATA_FORMAT_DATE_TIME As defined by date-time [RFC3339](http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14)
-     */
+    /** @var string DATA_FORMAT_DATE_TIME As defined by date-time [RFC3339](http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14) */
     public const DATA_FORMAT_DATE_TIME = 'date-time';
 
-    /**
-     * @var string DATA_FORMAT_PASSWORD Used to hint UIs the input needs to be obscured.
-     */
+    /** @var string DATA_FORMAT_PASSWORD Used to hint UIs the input needs to be obscured. */
     public const DATA_FORMAT_PASSWORD = 'password';
 
-    /**
-     * @var string DATA_FORMAT_EMAIL
-     */
+    /** @var string DATA_FORMAT_EMAIL */
     public const DATA_FORMAT_EMAIL = 'email';
 
-    /**
-     * @var string DATA_FORMAT_UUID
-     */
+    /** @var string DATA_FORMAT_UUID */
     public const DATA_FORMAT_UUID = 'uuid';
 
     /**
      * Mocks OpenApi Data.
-     *
      * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#data-types
      *
      * @param $dataType   string     OpenApi data type. Use constants from this class
@@ -199,9 +161,9 @@ interface OpenApiDataMockerInterface
      * @param int|null    $minLength  (optional) Default is 0
      * @param int|null    $maxLength  (optional) Default is 100 chars
      * @param array       $enum       (optional) This array should have at least one element.
-     *                                Elements in the array should be unique.
+     * Elements in the array should be unique.
      * @param string|null $pattern    (optional) This string should be a valid regular expression, according to the ECMA 262 regular expression dialect.
-     *                                Recall: regular expressions are not implicitly anchored.
+     * Recall: regular expressions are not implicitly anchored.
      *
      * @throws \InvalidArgumentException when invalid arguments passed
      *
@@ -251,10 +213,10 @@ interface OpenApiDataMockerInterface
      * @param int|null               $minProperties        (optional) An object instance is valid against "minProperties" if its number of properties is greater than, or equal to, the value of this keyword.
      * @param int|null               $maxProperties        (optional) An object instance is valid against "maxProperties" if its number of properties is less than, or equal to, the value of this keyword.
      * @param bool|object|array|null $additionalProperties (optional) If "additionalProperties" is true, validation always succeeds.
-     *                                                     If "additionalProperties" is false, validation succeeds only if the instance is an object and all properties on the instance were covered by "properties" and/or "patternProperties".
-     *                                                     If "additionalProperties" is an object, validate the value as a schema to all of the properties that weren't validated by "properties" nor "patternProperties".
+     * If "additionalProperties" is false, validation succeeds only if the instance is an object and all properties on the instance were covered by "properties" and/or "patternProperties".
+     * If "additionalProperties" is an object, validate the value as a schema to all of the properties that weren't validated by "properties" nor "patternProperties".
      * @param array|null             $required             (optional) This array MUST have at least one element.  Elements of this array must be strings, and MUST be unique.
-     *                                                     An object instance is valid if its property set contains all elements in this array value.
+     * An object instance is valid if its property set contains all elements in this array value.
      *
      * @throws \InvalidArgumentException when invalid arguments passed
      *

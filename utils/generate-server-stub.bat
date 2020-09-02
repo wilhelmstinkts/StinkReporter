@@ -1,1 +1,1 @@
-docker run --rm -v %cd%:/project openapitools/openapi-generator-cli generate -i /project/interface/openapi.yaml -g php-slim4 -o /project/source
+docker run --rm -v %cd%:/project openapitools/openapi-generator-cli:v4.3.1 generate -i /project/interface/openapi.yaml -g php-slim4 -o /project/source

@@ -33,6 +33,8 @@ use Dyorg\TokenAuthentication;
 use Dyorg\TokenAuthentication\TokenSearch;
 use Psr\Http\Message\ServerRequestInterface;
 use OpenAPIServer\Middleware\JsonBodyParserMiddleware;
+use OpenAPIServer\Mock\OpenApiDataMocker;
+use OpenAPIServer\Mock\OpenApiDataMockerMiddleware;
 use Exception;
 
 /**
@@ -45,14 +47,10 @@ use Exception;
 class SlimRouter
 {
 
-    /**
-     * @var App instance
-     */
+    /** @var App instance */
     private $slimApp;
 
-    /**
-     * @var array[] list of all api operations
-     */
+    /** @var array[] list of all api operations */
     private $operations = [
         [
             'httpMethod' => 'GET',
@@ -62,6 +60,25 @@ class SlimRouter
             'classname' => 'AbstractReportApi',
             'userClassname' => 'ReportApi',
             'operationId' => 'getReports',
+            'responses' => [
+                'default' => [
+                    'code' => 200,
+                    'message' => 'All reports',
+                    'jsonSchema' => '{
+  "description" : "All reports",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/reportOutput"
+        }
+      }
+    }
+  }
+}',
+                ],
+            ],
             'authMethods' => [
             ],
         ],
@@ -73,6 +90,30 @@ class SlimRouter
             'classname' => 'AbstractReportApi',
             'userClassname' => 'ReportApi',
             'operationId' => 'postNewReport',
+            'responses' => [
+                'default' => [
+                    'code' => 201,
+                    'message' => 'Message saved',
+                    'jsonSchema' => '{
+  "description" : "Message saved"
+}',
+                ],
+                '400' => [
+                    'code' => 400,
+                    'message' => 'Bad Request',
+                    'jsonSchema' => '{
+  "description" : "Bad Request",
+  "content" : {
+    "text/plain" : {
+      "schema" : {
+        "type" : "string",
+        "example" : "You must provide a message in the request body"
+      }
+    }
+  }
+}',
+                ],
+            ],
             'authMethods' => [
             ],
         ],
@@ -97,12 +138,13 @@ class SlimRouter
         $container = $this->slimApp->getContainer();
 
 
-        $userOptions = null;
-        if ($settings instanceof ContainerInterface && $settings->has('tokenAuthenticationOptions')) {
-            $userOptions = $settings->get('tokenAuthenticationOptions');
-        } elseif (is_array($settings) && isset($settings['tokenAuthenticationOptions'])) {
-            $userOptions = $settings['tokenAuthenticationOptions'];
-        }
+        $userOptions = $this->getSetting($settings, 'tokenAuthenticationOptions', null);
+
+        // mocker options
+        $mockerOptions = $this->getSetting($settings, 'mockerOptions', null);
+        $dataMocker = $mockerOptions['dataMocker'] ?? new OpenApiDataMocker();
+        $getMockResponseCallback = $mockerOptions['getMockResponseCallback'] ?? null;
+        $mockAfterCallback = $mockerOptions['afterCallback'] ?? null;
 
         foreach ($this->operations as $operation) {
             $callback = function ($request, $response, $arguments) use ($operation) {
@@ -117,6 +159,10 @@ class SlimRouter
                 $callback = "\\{$operation['apiPackage']}\\{$operation['userClassname']}:{$operation['operationId']}";
             }
 
+
+            if (is_callable($getMockResponseCallback)) {
+                $middlewares[] = new OpenApiDataMockerMiddleware($dataMocker, $operation['responses'], $getMockResponseCallback, $mockAfterCallback);
+            }
 
             $this->addRoute(
                 [$operation['httpMethod']],
@@ -142,6 +188,26 @@ class SlimRouter
         }
 
         return array_merge($userOptions, $staticOptions);
+    }
+
+    /**
+     * Returns app setting by name.
+     *
+     * @param ContainerInterface|array $settings    Either a ContainerInterface or an associative array of app settings
+     * @param string                   $settingName Setting name
+     * @param mixed                    $default     Default setting value.
+     *
+     * @return mixed
+     */
+    private function getSetting($settings, $settingName, $default = null)
+    {
+        if ($settings instanceof ContainerInterface && $settings->has($settingName)) {
+            return $settings->get($settingName);
+        } elseif (is_array($settings) && array_key_exists($settingName, $settings)) {
+            return $settings[$settingName];
+        }
+
+        return $default;
     }
 
     /**

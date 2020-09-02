@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Coordinates
+ * Weather
  *
  * PHP version 7.1
  *
@@ -19,40 +19,35 @@ namespace OpenAPIServer\Model;
 use OpenAPIServer\Interfaces\ModelInterface;
 
 /**
- * Coordinates
+ * Weather
  *
  * @package OpenAPIServer\Model
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
-class Coordinates implements ModelInterface
+class Weather implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "latitude", "longitude" ],
+  "required" : [ "temperature", "wind" ],
   "type" : "object",
   "properties" : {
-    "longitude" : {
-      "maximum" : 90,
-      "minimum" : -90,
+    "temperature" : {
       "type" : "number",
-      "example" : 40.1234567
+      "example" : 270
     },
-    "latitude" : {
-      "maximum" : 180,
-      "minimum" : -180,
-      "type" : "number",
-      "example" : -40.1234567
+    "wind" : {
+      "$ref" : "#/components/schemas/wind"
     }
   }
 }
 SCHEMA;
 
-    /** @var float $longitude */
-    private $longitude;
+    /** @var float $temperature */
+    private $temperature;
 
-    /** @var float $latitude */
-    private $latitude;
+    /** @var \OpenAPIServer\Model\Wind $wind */
+    private $wind;
 
     /**
      * Returns model schema.

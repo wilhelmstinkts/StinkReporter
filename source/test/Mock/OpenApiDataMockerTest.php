@@ -35,15 +35,15 @@ use DateTime;
 /**
  * OpenApiDataMockerTest Class Doc Comment
  *
- * @package            OpenAPIServer\Mock
- * @author             OpenAPI Generator team
- * @link               https://github.com/openapitools/openapi-generator
+ * @package OpenAPIServer\Mock
+ * @author  OpenAPI Generator team
+ * @link    https://github.com/openapitools/openapi-generator
  * @coversDefaultClass \OpenAPIServer\Mock\OpenApiDataMocker
  */
 class OpenApiDataMockerTest extends TestCase
 {
     /**
-     * @covers       ::mock
+     * @covers ::mock
      * @dataProvider provideMockCorrectArguments
      */
     public function testMockCorrectArguments($dataType, $dataFormat, $options, $expectedType)
@@ -76,9 +76,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @covers                   ::mock
-     * @dataProvider             provideMockInvalidArguments
-     * @expectedException        \InvalidArgumentException
+     * @covers ::mock
+     * @dataProvider provideMockInvalidArguments
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage "dataType" must be one of integer, number, string, boolean, array, object
      */
     public function testMockInvalidArguments($dataType, $dataFormat, $options)
@@ -102,19 +102,15 @@ class OpenApiDataMockerTest extends TestCase
     public function testMockWithStringEnumOptions()
     {
         $mocker = new OpenApiDataMocker();
-        $string = $mocker->mock(
-            IMocker::DATA_TYPE_STRING,
-            null,
-            [
+        $string = $mocker->mock(IMocker::DATA_TYPE_STRING, null, [
             'enum' => ['foobar', 'foobaz', 'helloworld'],
-            ]
-        );
+        ]);
         $this->assertContains($string, ['foobar', 'foobaz', 'helloworld']);
     }
 
     /**
      * @dataProvider provideMockIntegerCorrectArguments
-     * @covers       ::mockInteger
+     * @covers ::mockInteger
      */
     public function testMockIntegerWithCorrectArguments(
         $dataFormat = null,
@@ -168,8 +164,8 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockIntegerInvalidArguments
-     * @covers            ::mockInteger
+     * @dataProvider provideMockIntegerInvalidArguments
+     * @covers ::mockInteger
      * @expectedException \InvalidArgumentException
      */
     public function testMockIntegerWithInvalidArguments(
@@ -195,7 +191,7 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @covers       ::mockInteger
+     * @covers ::mockInteger
      * @dataProvider provideMockIntegerFormats
      */
     public function testMockIntegerWithFormats(
@@ -226,7 +222,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockNumberCorrectArguments
-     * @covers       ::mockNumber
+     * @covers ::mockNumber
      */
     public function testMockNumberWithCorrectArguments(
         $dataFormat = null,
@@ -280,9 +276,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockNumberInvalidArguments
+     * @dataProvider provideMockNumberInvalidArguments
      * @expectedException \InvalidArgumentException
-     * @covers            ::mockNumber
+     * @covers ::mockNumber
      */
     public function testMockNumberWithInvalidArguments(
         $dataFormat = null,
@@ -308,7 +304,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockStringCorrectArguments
-     * @covers       ::mockString
+     * @covers ::mockString
      */
     public function testMockStringWithCorrectArguments(
         $dataFormat = null,
@@ -378,9 +374,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockStringInvalidArguments
+     * @dataProvider provideMockStringInvalidArguments
      * @expectedException \InvalidArgumentException
-     * @covers            ::mockString
+     * @covers ::mockString
      */
     public function testMockStringWithInvalidArguments(
         $dataFormat = null,
@@ -410,8 +406,8 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @covers       ::mock
-     * @covers       ::mockString
+     * @covers ::mock
+     * @covers ::mockString
      * @dataProvider provideMockStringByteFormatArguments
      */
     public function testMockStringWithByteFormat(
@@ -446,8 +442,8 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @covers       ::mock
-     * @covers       ::mockString
+     * @covers ::mock
+     * @covers ::mockString
      * @dataProvider provideMockStringBinaryFormatArguments
      */
     public function testMockStringWithBinaryFormat(
@@ -481,8 +477,8 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @covers       ::mock
-     * @covers       ::mockString
+     * @covers ::mock
+     * @covers ::mockString
      * @dataProvider provideMockStringDateFormatArguments
      */
     public function testMockStringWithDateAndDateTimeFormat(
@@ -528,8 +524,8 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @covers       ::mock
-     * @covers       ::mockString
+     * @covers ::mock
+     * @covers ::mockString
      * @dataProvider provideMockStringUuidFormatArguments
      */
     public function testMockStringWithUuidFormat(
@@ -677,7 +673,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockArrayCorrectArguments
-     * @covers       ::mockArray
+     * @covers ::mockArray
      */
     public function testMockArrayFlattenWithCorrectArguments(
         $items,
@@ -824,9 +820,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockArrayInvalidArguments
+     * @dataProvider provideMockArrayInvalidArguments
      * @expectedException \InvalidArgumentException
-     * @covers            ::mockArray
+     * @covers ::mockArray
      */
     public function testMockArrayWithInvalidArguments(
         $items,
@@ -881,7 +877,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockArrayWithRefArguments
-     * @covers       ::mockArray
+     * @covers ::mockArray
      */
     public function testMockArrayWithRef($items, $expectedStructure)
     {
@@ -914,7 +910,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockObjectCorrectArguments
-     * @covers       ::mockObject
+     * @covers ::mockObject
      */
     public function testMockObjectWithCorrectArguments(
         $properties,
@@ -969,9 +965,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockObjectInvalidArguments
+     * @dataProvider provideMockObjectInvalidArguments
      * @expectedException \InvalidArgumentException
-     * @covers            ::mockObject
+     * @covers ::mockObject
      */
     public function testMockObjectWithInvalidArguments(
         $properties,
@@ -1056,7 +1052,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockFromSchemaCorrectArguments
-     * @covers       ::mockFromSchema
+     * @covers ::mockFromSchema
      */
     public function testMockFromSchemaWithCorrectArguments($schema, $expectedType)
     {
@@ -1144,9 +1140,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockFromSchemaInvalidArguments
+     * @dataProvider provideMockFromSchemaInvalidArguments
      * @expectedException \InvalidArgumentException
-     * @covers            ::mockFromSchema
+     * @covers ::mockFromSchema
      */
     public function testMockFromSchemaWithInvalidArguments($schema)
     {
@@ -1169,7 +1165,7 @@ class OpenApiDataMockerTest extends TestCase
 
     /**
      * @dataProvider provideMockFromRefCorrectArguments
-     * @covers       ::mockFromRef
+     * @covers ::mockFromRef
      */
     public function testMockFromRefWithCorrectArguments($ref, $expectedStructure)
     {
@@ -1195,9 +1191,9 @@ class OpenApiDataMockerTest extends TestCase
     }
 
     /**
-     * @dataProvider      provideMockFromRefInvalidArguments
+     * @dataProvider provideMockFromRefInvalidArguments
      * @expectedException \InvalidArgumentException
-     * @covers            ::mockFromRef
+     * @covers ::mockFromRef
      */
     public function testMockFromRefWithInvalidArguments($ref)
     {

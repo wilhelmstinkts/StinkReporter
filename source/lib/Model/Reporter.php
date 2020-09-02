@@ -44,14 +44,10 @@ class Reporter implements ModelInterface
 }
 SCHEMA;
 
-    /**
-     * @var string $name
-     */
+    /** @var string $name */
     private $name;
 
-    /**
-     * @var string $email
-     */
+    /** @var string $email */
     private $email;
 
     /**

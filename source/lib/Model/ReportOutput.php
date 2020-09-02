@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Coordinates
+ * ReportOutput
  *
  * PHP version 7.1
  *
@@ -19,40 +19,45 @@ namespace OpenAPIServer\Model;
 use OpenAPIServer\Interfaces\ModelInterface;
 
 /**
- * Coordinates
+ * ReportOutput
  *
  * @package OpenAPIServer\Model
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
-class Coordinates implements ModelInterface
+class ReportOutput implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "latitude", "longitude" ],
+  "required" : [ "time", "weather" ],
   "type" : "object",
   "properties" : {
-    "longitude" : {
-      "maximum" : 90,
-      "minimum" : -90,
-      "type" : "number",
-      "example" : 40.1234567
+    "time" : {
+      "type" : "string",
+      "format" : "datetime",
+      "example" : "2020-03-10T12:00:00Z"
     },
-    "latitude" : {
-      "maximum" : 180,
-      "minimum" : -180,
-      "type" : "number",
-      "example" : -40.1234567
+    "weather" : {
+      "$ref" : "#/components/schemas/weather"
     }
-  }
+  },
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/baseReport"
+  } ]
 }
 SCHEMA;
 
-    /** @var float $longitude */
-    private $longitude;
+    /** @var string $time */
+    private $time;
 
-    /** @var float $latitude */
-    private $latitude;
+    /** @var \OpenAPIServer\Model\Weather $weather */
+    private $weather;
+
+    /** @var \OpenAPIServer\Model\BaseReportLocation $location */
+    private $location;
+
+    /** @var \OpenAPIServer\Model\Stink $stink */
+    private $stink;
 
     /**
      * Returns model schema.
