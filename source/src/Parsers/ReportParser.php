@@ -22,11 +22,11 @@ class ReportParser
         ReportParser::throwOnMissingProps($reportSchema, $report);
         $location = ReportParser::parseLocation($report["location"]);
         $weatherService = \Environment\Environment::weatherService();
-        $wind = $weatherService->getWind($location->coordinates);
+        $weather = $weatherService->getWeather($location->coordinates);
         $time = new DateTime("now", new \DateTimeZone("UTC"));
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
-        return new \OpenAPIServer\DTOs\Report($location, $time, $stink, $wind, $reporter);
+        return new \OpenAPIServer\DTOs\Report($location, $time, $stink, $weather, $reporter);
     }
 
     private static function throwOnMissingProps(array $schema, $given)

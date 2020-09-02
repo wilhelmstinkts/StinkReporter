@@ -8,15 +8,15 @@ class Report implements \JsonSerializable
     public Location $location;
     public Stink $stink;
     public ?Reporter $reporter;
-    public Wind $wind;
+    public Weather $weather;
 
-    public function __construct(Location $location, \DateTime $time, Stink $stink, Wind $wind, ?Reporter $reporter)
+    public function __construct(Location $location, \DateTime $time, Stink $stink, Weather $weather, ?Reporter $reporter)
     {
         $this->location = $location;
         $this->time = $time;
         $this->stink = $stink;
         $this->reporter = $reporter;
-        $this->wind = $wind;
+        $this->weather = $weather;
     }
 
     public function jsonSerialize()
@@ -25,7 +25,7 @@ class Report implements \JsonSerializable
             'time' => $this->time->format(\DateTime::ISO8601),
             'location' => $this->location,
             'stink' => $this->stink,
-            'wind' => $this->wind
+            'weather' => $this->weather
         ];
     }
 }

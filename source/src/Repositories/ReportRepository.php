@@ -24,7 +24,7 @@ class ReportRepository
 
     public function saveReport(\OpenAPIServer\DTOs\Report $report)
     {
-        $sql = "CALL InsertReport(:time, :stinkKind, :intensity, ST_GeomFromText(:coordinates, 4326), :street, :number, :zip, :city, :country, :windDirection, :windSpeed, :windGustSpeed)";
+        $sql = "CALL InsertReport(:time, :stinkKind, :intensity, ST_GeomFromText(:coordinates, 4326), :street, :number, :zip, :city, :country, :temperature, :windDirection, :windSpeed, :windGustSpeed)";
         $statement = $this->pdo->prepare($sql);
         $success = $statement->execute(array(
             ':time' =>  $report->time->format(ReportRepository::dateFormat()),
@@ -36,9 +36,10 @@ class ReportRepository
             ':zip' => $report->location->address->zip,
             ':city' => $report->location->address->city,
             ':country' => $report->location->address->country,
-            ':windDirection' => $report->wind->direction,
-            ':windSpeed' => $report->wind->speed,
-            ':windGustSpeed' => $report->wind->gustSpeed
+            ':temperature' => $report->weather->temperature,
+            ':windDirection' => $report->weather->wind->direction,
+            ':windSpeed' => $report->weather->wind->speed,
+            ':windGustSpeed' => $report->weather->wind->gustSpeed
         ));
         if (!$success) {
             throw new Exception("Error while writing report to database.", 1);
@@ -51,6 +52,7 @@ class ReportRepository
         SELECT
             reports.time,
             reports.intensity,
+            reports.temperature,
             reports.wind_direction,
             reports.wind_speed,
             reports.wind_gust_speed,
@@ -110,13 +112,18 @@ class ReportRepository
             $inputArray["wind_gust_speed"]
         );
 
+        $weather = new \OpenAPIServer\DTOs\Weather(
+            $inputArray["temperature"],
+            $wind
+        );
+
         $datetime =  \DateTime::createFromFormat(ReportRepository::dateFormat(), $inputArray["time"], new \DateTimeZone("UTC"));
 
         return new \OpenAPIServer\DTOs\Report(
             $location,
             $datetime,
             $stink,
-            $wind,
+            $weather,
             null
         );
     }

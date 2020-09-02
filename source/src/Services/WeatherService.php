@@ -19,7 +19,7 @@ class WeatherService
         $this->apiKey = $apiKey;
     }
 
-    public function getWind(\OpenAPIServer\DTOs\Coordinates $coordinates)
+    public function getWeather(\OpenAPIServer\DTOs\Coordinates $coordinates): \OpenAPIServer\DTOs\Weather
     {
         $requestUri = "{$this->baseUrl}?lat={$coordinates->latitude}&lon={$coordinates->longitude}&APPID={$this->apiKey}";
         $curl = curl_init();
@@ -31,12 +31,25 @@ class WeatherService
         return WeatherService::parseApiResponse($apiResponse);
     }
 
-    public static function parseApiResponse(string $apiResponse)
+    public static function parseApiResponse(string $apiResponse): \OpenAPIServer\DTOs\Weather
     {
-        $wind = json_decode($apiResponse, true)["wind"];
+        $responseArray = json_decode($apiResponse, true);
+        $wind = WeatherService::parseWind($responseArray);
+        $temperature = WeatherService::parseTemperature($responseArray);
+        return new  \OpenAPIServer\DTOs\Weather($temperature, $wind);
+    }
+
+    private static function parseWind(array $responseArray): \OpenAPIServer\DTOs\Wind
+    {
+        $wind = $responseArray["wind"];
         if (array_key_exists("gust", $wind)) {
             return new \OpenAPIServer\DTOs\Wind($wind["deg"], $wind["speed"], $wind["gust"]);
         }
         return new \OpenAPIServer\DTOs\Wind($wind["deg"], $wind["speed"], null);
+    }
+
+    private static function parseTemperature(array $responseArray): float
+    {
+        return $responseArray["main"]["temp"];
     }
 }

@@ -17,7 +17,9 @@ class MailServiceTest extends TestCase
         $stink = new \OpenAPIServer\DTOs\Stink('Biomüll', 3);
         $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
         $wind = new \OpenAPIServer\DTOs\Wind(270, 5, 9.1);
-        $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $wind, $reporter);
+        $temperature = 20.45 + 273.15;
+        $weather = new \OpenAPIServer\DTOs\Weather($temperature, $wind);
+        $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $weather, $reporter);
 
         $expectedMessage = <<<'EOD'
         <p>Sehr geehrte Damen und Herren,</p>
@@ -31,6 +33,7 @@ class MailServiceTest extends TestCase
                     <th rowspan=2>Geruchsintensität</th>
                     <th colspan=2>Ort</th>
                     <th colspan=3>Wind</th>
+                    <th rowspan=2>Temperatur</th>
                 </tr>
                 <tr>                    
                     <th>Adresse</th>
@@ -52,6 +55,7 @@ class MailServiceTest extends TestCase
                     <td>270°</td>
                     <td>5 m/s</td>
                     <td>9.1 m/s</td>
+                    <td>20.45° C</td>
                 </tr>
             </tbody>
         </table>
@@ -78,7 +82,9 @@ class MailServiceTest extends TestCase
         $stink = new \OpenAPIServer\DTOs\Stink('Biomüll', 3);
         $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
         $wind = new \OpenAPIServer\DTOs\Wind(270, 5, null);
-        $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $wind, $reporter);
+        $temperature = -3.5 + 273.15;
+        $weather = new \OpenAPIServer\DTOs\Weather($temperature, $wind);
+        $report = new \OpenAPIServer\DTOs\Report($location, $time, $stink, $weather, $reporter);
 
         $expectedMessage = <<<'EOD'
         <p>Sehr geehrte Damen und Herren,</p>
@@ -92,6 +98,7 @@ class MailServiceTest extends TestCase
                     <th rowspan=2>Geruchsintensität</th>
                     <th colspan=2>Ort</th>
                     <th colspan=3>Wind</th>
+                    <th rowspan=2>Temperatur</th>
                 </tr>
                 <tr>                    
                     <th>Adresse</th>
@@ -114,6 +121,7 @@ class MailServiceTest extends TestCase
                     <td>270°</td>
                     <td>5 m/s</td>
                     <td></td>
+                    <td>-3.5° C</td>
                 </tr>
             </tbody>
         </table>

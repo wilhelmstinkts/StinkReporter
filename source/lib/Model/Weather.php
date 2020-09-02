@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ReportOutput
+ * Weather
  *
  * PHP version 7.1
  *
@@ -19,45 +19,35 @@ namespace OpenAPIServer\Model;
 use OpenAPIServer\Interfaces\ModelInterface;
 
 /**
- * ReportOutput
+ * Weather
  *
  * @package OpenAPIServer\Model
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
-class ReportOutput implements ModelInterface
+class Weather implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "time", "weather" ],
+  "required" : [ "temperature", "wind" ],
   "type" : "object",
   "properties" : {
-    "time" : {
-      "type" : "string",
-      "format" : "datetime",
-      "example" : "2020-03-10T12:00:00Z"
+    "temperature" : {
+      "type" : "number",
+      "example" : 270
     },
-    "weather" : {
-      "$ref" : "#/components/schemas/weather"
+    "wind" : {
+      "$ref" : "#/components/schemas/wind"
     }
-  },
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/baseReport"
-  } ]
+  }
 }
 SCHEMA;
 
-    /** @var string $time */
-    private $time;
+    /** @var float $temperature */
+    private $temperature;
 
-    /** @var \OpenAPIServer\Model\Weather $weather */
-    private $weather;
-
-    /** @var \OpenAPIServer\Model\BaseReportLocation $location */
-    private $location;
-
-    /** @var \OpenAPIServer\Model\Stink $stink */
-    private $stink;
+    /** @var \OpenAPIServer\Model\Wind $wind */
+    private $wind;
 
     /**
      * Returns model schema.
