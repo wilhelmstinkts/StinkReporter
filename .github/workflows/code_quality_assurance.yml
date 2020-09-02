@@ -4,17 +4,19 @@ on: [push]
 
 jobs:
   test:
-   runs-on: ubuntu-latest
-       
-   steps:
-    - name: Checkout head
-      uses: actions/checkout@v2
-    - name: Install requirements
-      working-directory: ./source
-      run: composer update
-    - name: Unit Tests
-      working-directory: ./source
-      run: composer test
-    - name: Linting
-      working-directory: ./source
-      run: composer phpcs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout head
+        uses: actions/checkout@v2
+      - name: Install requirements
+        working-directory: ./source
+        run: |
+          php -v
+          composer update
+      - name: Unit Tests
+        working-directory: ./source
+        run: composer test
+      - name: Linting
+        working-directory: ./source
+        run: composer phpcs
