@@ -98,7 +98,8 @@ class ReportRepository
 
         $location = new \OpenAPIServer\DTOs\Location(
             $address,
-            $coordinates
+            $coordinates,
+            null
         );
 
         $stink = new \OpenAPIServer\DTOs\Stink(

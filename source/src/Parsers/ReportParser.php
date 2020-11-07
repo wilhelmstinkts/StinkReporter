@@ -68,18 +68,23 @@ class ReportParser
         $adress = null;
         $adressArray = $location["address"];
         $coordinatesArray = $location["coordinates"];
+        $isHome = $location["isHome"];
+        if (!is_null($isHome) && !is_bool($isHome)) {
+            $type = gettype($isHome);
+            throw new Exception("Expected a boolean for isHome but got type $type", 1);
+        }
+
         $hasAddress = !\is_null($adressArray);
 
         if ($hasAddress) {
             $address = ReportParser::parseAndValidateAddress($adressArray);
         }
 
-
         $coordinateSchema = \OpenAPIServer\Model\Coordinates::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($coordinateSchema, $coordinatesArray);
         $coordinates = ReportParser::parseAndvalidateCoordinates($coordinatesArray);
 
-        return new \OpenAPIServer\DTOs\Location($address, $coordinates);
+        return new \OpenAPIServer\DTOs\Location($address, $coordinates, $isHome);
     }
 
     private static function parseAndValidateAddress($address): \OpenAPIServer\DTOs\Address
