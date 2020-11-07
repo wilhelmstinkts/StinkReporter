@@ -67,6 +67,9 @@ components:
               $ref: "#/components/schemas/address"
             coordinates:
               $ref: "#/components/schemas/coordinates"
+            isHome:
+              type: boolean
+              default: false
           required:
             - coordinates
         stink:
