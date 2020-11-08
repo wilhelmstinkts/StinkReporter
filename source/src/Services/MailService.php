@@ -100,16 +100,17 @@ class MailService
             $text .= "<td></td>";
         }
 
-        $text .= <<<EOD
+        $text .= "
                     <td>{$temperatureCelsius}° C</td>
                 </tr>
             </tbody>
         </table>
+        <p>Die gemeldete Addresse ist " . ($report->location->isHome ? "" : "nicht ") . "meine Wohnanschrift.</p>
         <p>Danke, dass Sie sich durch Weiterverfolgung oben angezeigter Geruchsbelästigung für mehr Lebensqualität, saubere Luft und eine bessere Stadt einsetzen!</p>
         <p>Mit freundlichen Grüßen</p>
         <p>{$report->reporter->name}<br />
         {$report->reporter->email}</p>
-        EOD;
+        ";
 
         return $text;
     }

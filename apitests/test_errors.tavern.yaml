@@ -82,6 +82,35 @@ stages:
     response:
       status_code: 400
 
+  - name: IsHome not boolean
+    request:
+      url: http://localhost:8080/api/v0/report
+      method: POST
+      json:
+        report:
+          time: "2000-01-01T12:00:00Z"
+          location:
+            coordinates:
+              latitude: 52.587516
+              longitude: 13.362886
+            address:
+              street: "Garibaldistraße"
+              number: "7A"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+            isHome: 8
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
   - name: Missing stink
     request:
       url: http://localhost:8080/api/v0/report

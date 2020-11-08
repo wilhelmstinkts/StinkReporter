@@ -4,7 +4,7 @@ namespace OpenAPIServer\DTOs;
 
 class Address
 {
-     
+
     public string $street;
     public string $number;
     public string $zip;

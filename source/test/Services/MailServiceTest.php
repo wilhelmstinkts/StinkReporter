@@ -9,11 +9,11 @@ use OpenAPIServer\DTOs;
 class MailServiceTest extends TestCase
 {
 
-    public function testFormatWithoutAddressWintertime()
+    public function testFormatWithoutAddressWintertimeNotHome()
     {
         $time = \DateTime::createFromFormat(\DateTimeInterface::ISO8601, '2020-03-10T12:00:00Z', new \DateTimeZone('UTC'));
         $coordinates = new \OpenAPIServer\DTOs\Coordinates(13.36086, 52.58412);
-        $location = new \OpenAPIServer\DTOs\Location(null, $coordinates);
+        $location = new \OpenAPIServer\DTOs\Location(null, $coordinates, false);
         $stink = new \OpenAPIServer\DTOs\Stink('Biomüll', 3);
         $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
         $wind = new \OpenAPIServer\DTOs\Wind(270, 5, 9.1);
@@ -59,6 +59,7 @@ class MailServiceTest extends TestCase
                 </tr>
             </tbody>
         </table>
+        <p>Die gemeldete Addresse ist nicht meine Wohnanschrift.</p>
         <p>Danke, dass Sie sich durch Weiterverfolgung oben angezeigter Geruchsbelästigung für mehr Lebensqualität, saubere Luft und eine bessere Stadt einsetzen!</p>
         <p>Mit freundlichen Grüßen</p>
         <p>Jane Doe<br />
@@ -73,12 +74,12 @@ class MailServiceTest extends TestCase
         $this->assertEquals($expectedMessage, $generatedMessage);
     }
 
-    public function testFormatWithAddressSummertime()
+    public function testFormatWithAddressSummertimeIsHome()
     {
         $time = \DateTime::createFromFormat(\DateTimeInterface::ISO8601, '2020-04-13T12:05:31Z', new \DateTimeZone('UTC'));
         $coordinates = new \OpenAPIServer\DTOs\Coordinates(13.36086, 52.58412);
         $adress = new \OpenAPIServer\DTOs\Address('Hertzstraße', '1', '13158', 'Berlin', 'Germany');
-        $location = new \OpenAPIServer\DTOs\Location($adress, $coordinates);
+        $location = new \OpenAPIServer\DTOs\Location($adress, $coordinates, true);
         $stink = new \OpenAPIServer\DTOs\Stink('Biomüll', 3);
         $reporter = new \OpenAPIServer\DTOs\Reporter('Jane Doe', 'jane.doe@provider.org');
         $wind = new \OpenAPIServer\DTOs\Wind(270, 5, null);
@@ -125,6 +126,7 @@ class MailServiceTest extends TestCase
                 </tr>
             </tbody>
         </table>
+        <p>Die gemeldete Addresse ist meine Wohnanschrift.</p>
         <p>Danke, dass Sie sich durch Weiterverfolgung oben angezeigter Geruchsbelästigung für mehr Lebensqualität, saubere Luft und eine bessere Stadt einsetzen!</p>
         <p>Mit freundlichen Grüßen</p>
         <p>Jane Doe<br />
