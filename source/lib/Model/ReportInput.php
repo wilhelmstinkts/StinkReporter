@@ -32,6 +32,9 @@ class ReportInput implements ModelInterface
   "required" : [ "reporter" ],
   "type" : "object",
   "properties" : {
+    "timeFrame" : {
+      "$ref" : "#/components/schemas/timeFrame"
+    },
     "reporter" : {
       "$ref" : "#/components/schemas/reporter"
     }
@@ -41,6 +44,9 @@ class ReportInput implements ModelInterface
   } ]
 }
 SCHEMA;
+
+    /** @var \OpenAPIServer\Model\TimeFrame $timeFrame */
+    private $timeFrame;
 
     /** @var \OpenAPIServer\Model\Reporter $reporter */
     private $reporter;

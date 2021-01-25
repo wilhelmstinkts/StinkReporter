@@ -29,26 +29,23 @@ class ReportOutput implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "time", "weather" ],
+  "required" : [ "weather" ],
   "type" : "object",
   "properties" : {
-    "time" : {
-      "type" : "string",
-      "format" : "datetime",
-      "example" : "2020-03-10T12:00:00Z"
-    },
     "weather" : {
       "$ref" : "#/components/schemas/weather"
     }
   },
   "allOf" : [ {
     "$ref" : "#/components/schemas/baseReport"
+  } ],
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/timeFrame"
+  }, {
+    "$ref" : "#/components/schemas/time"
   } ]
 }
 SCHEMA;
-
-    /** @var string $time */
-    private $time;
 
     /** @var \OpenAPIServer\Model\Weather $weather */
     private $weather;

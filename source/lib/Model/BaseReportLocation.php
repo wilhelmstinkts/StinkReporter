@@ -36,6 +36,10 @@ class BaseReportLocation implements ModelInterface
     },
     "coordinates" : {
       "$ref" : "#/components/schemas/coordinates"
+    },
+    "isHome" : {
+      "type" : "boolean",
+      "default" : false
     }
   }
 }
@@ -46,6 +50,9 @@ SCHEMA;
 
     /** @var \OpenAPIServer\Model\Coordinates $coordinates */
     private $coordinates;
+
+    /** @var bool $isHome */
+    private $isHome;
 
     /**
      * Returns model schema.

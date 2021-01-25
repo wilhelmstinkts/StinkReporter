@@ -146,6 +146,7 @@ Class | Method | HTTP request | Description
 * OpenAPIServer\Model\ReportOutput
 * OpenAPIServer\Model\Reporter
 * OpenAPIServer\Model\Stink
+* OpenAPIServer\Model\TimeFrame
 * OpenAPIServer\Model\Weather
 * OpenAPIServer\Model\Wind
 
