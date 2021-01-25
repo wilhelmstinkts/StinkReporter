@@ -7,6 +7,8 @@ use DateTime;
 use DateTimeInterface;
 use OpenAPIServer\Model;
 use OpenAPIServer\DTOs;
+use OpenAPIServer\DTOs\Weather;
+use OpenAPIServer\DTOs\Wind;
 
 class WeatherService
 {
@@ -19,19 +21,37 @@ class WeatherService
         $this->apiKey = $apiKey;
     }
 
-    public function getWeather(\OpenAPIServer\DTOs\Coordinates $coordinates): \OpenAPIServer\DTOs\Weather
+    public function getCurrentWeather(\OpenAPIServer\DTOs\Coordinates $coordinates): \OpenAPIServer\DTOs\Weather
     {
-        $requestUri = "{$this->baseUrl}?lat={$coordinates->latitude}&lon={$coordinates->longitude}&APPID={$this->apiKey}";
+        $requestUri = "{$this->baseUrl}/weather?lat={$coordinates->latitude}&lon={$coordinates->longitude}&APPID={$this->apiKey}";
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, "$requestUri");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $apiResponse = curl_exec($curl);
         curl_close($curl);
 
-        return WeatherService::parseApiResponse($apiResponse);
+        return WeatherService::parseCurrentApiResponse($apiResponse);
     }
 
-    public static function parseApiResponse(string $apiResponse): \OpenAPIServer\DTOs\Weather
+    public function getHistoricWeather(\OpenAPIServer\DTOs\Coordinates $coordinates, DateTime $time): \OpenAPIServer\DTOs\Weather
+    {
+        $requestUri = "{$this->baseUrl}/onecall/timemachine?lat={$coordinates->latitude}&lon={$coordinates->longitude}&dt={$time->getTimeStamp}APPID={$this->apiKey}";
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "$requestUri");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $apiResponse = curl_exec($curl);
+        curl_close($curl);
+
+        $responseArray = json_decode($apiResponse, true);
+        $temperature = $responseArray["current"]["temp"];
+        $windSpeed = $responseArray["current"]["wind_speed"];
+        $windGust = $responseArray["current"]["wind_gust"];
+        $windDirection = $responseArray["current"]["wind_deg"];
+
+        return new Weather($temperature, new Wind($windDirection, $windSpeed, $windGust));
+    }
+
+    public static function parseCurrentApiResponse(string $apiResponse): \OpenAPIServer\DTOs\Weather
     {
         $responseArray = json_decode($apiResponse, true);
         $wind = WeatherService::parseWind($responseArray);

@@ -22,7 +22,7 @@ class ReportParser
         ReportParser::throwOnMissingProps($reportSchema, $report);
         $location = ReportParser::parseLocation($report["location"]);
         $weatherService = \Environment\Environment::weatherService();
-        $weather = $weatherService->getWeather($location->coordinates);
+        $weather = $weatherService->getCurrentWeather($location->coordinates);
         $time = new DateTime("now", new \DateTimeZone("UTC"));
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
