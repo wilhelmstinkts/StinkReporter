@@ -188,15 +188,16 @@ components:
     reportOutput:
       allOf:
         - $ref: "#/components/schemas/baseReport"
-      oneOf:
-        - $ref: "#/components/schemas/timeFrame"
-        - $ref: "#/components/schemas/time"
       type: object
       properties:
+        time:
+          type: string
+          format: date-time
         weather:
           $ref: "#/components/schemas/weather"
       required:
         - weather
+        - time
     timeFrame:
       type: object
       properties:
@@ -209,6 +210,3 @@ components:
       required:
         - startTime
         - endTime
-    time:
-      type: string
-      format: date-time

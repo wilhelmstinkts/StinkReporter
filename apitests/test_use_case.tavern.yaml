@@ -116,5 +116,4 @@ stages:
           stink:
             kind: "Biomüll"
             intensity: 3
-          startTime: "2021-01-25T20:00:00.000Z"
-          endTime: "2021-01-25T21:00:00.000Z"
+          time: "2021-01-25T20:30:00.000Z"
