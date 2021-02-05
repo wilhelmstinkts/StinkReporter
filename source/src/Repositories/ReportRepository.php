@@ -121,6 +121,6 @@ class ReportRepository
 
         $datetime =  \DateTime::createFromFormat(ReportRepository::dateFormat(), $inputArray["time"], new \DateTimeZone("UTC"));
 
-        return \OpenAPIServer\DTOs\Report::createWithSingleTime($location, $datetime, $stink, $weather, null);
+        return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $datetime, null);
     }
 }

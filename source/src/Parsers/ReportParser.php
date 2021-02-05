@@ -27,7 +27,7 @@ class ReportParser
         if (is_null($report["timeframe"])) {
             $time = new DateTime("now", new \DateTimeZone("UTC"));
             $weather = $weatherService->getCurrentWeather($location->coordinates);
-            return \OpenAPIServer\DTOs\Report::createWithSingleTime($location, $time, $stink, $weather, $reporter);
+            return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
         }
         $timeFrame = ReportParser::parseTimeFrame($report["timeframe"]);
         $weather = $weatherService->getHistoricWeather($location->coordinates, $timeFrame->averageTime());
