@@ -20,18 +20,13 @@ jobs:
       with:
         python-version: '3.x'
     - name: Prepare Database
-      working-directory: ./utils
+      working-directory: ./infrastructure
       run: |
-            chmod +x ./start-my-sql-in-docker.sh
-            ./start-my-sql-in-docker.sh
+            docker run -v ./sql:/commands --rm -d --name mysql -e MYSQL_ROOT_PASSWORD=totallyunsafe mysql:5.7.28
             docker exec mysql mysql -uroot -ptotallyunsafe --execute="\. /commands/create_tables.sql"
     - name: Prepare Api Tests
       working-directory: ./apitests
-      run: |
-            sudo apt-get install dos2unix
-            dos2unix ./*
-            chmod +x ./run-api-tests.sh
-            pip install tavern
+      run: pip install tavern
     - name: Run Api Tests
       working-directory: ./apitests
       run: ./run-api-tests.sh
