@@ -85,7 +85,7 @@ class MailServiceTest extends TestCase
         $wind = new \OpenAPIServer\DTOs\Wind(270, 5, null);
         $temperature = -3.5 + 273.15;
         $weather = new \OpenAPIServer\DTOs\Weather($temperature, $wind);
-        $report = new \OpenAPIServer\DTOs\Report($location,  $stink, $weather, $time, $reporter);
+        $report = new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
 
         $expectedMessage = <<<'EOD'
         <p>Sehr geehrte Damen und Herren,</p>

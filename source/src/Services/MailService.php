@@ -78,7 +78,9 @@ class MailService
                 <tr>
                     <td>{$berlinTime->format('d.m.Y')}</td>
         EOD;
-        $text .= $includeTimeFrame ? "<td>{$report->timeFrame->startTime->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('H:i')}</td><td>{$report->timeFrame->endTime->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('H:i')}</td>" : "<td>{$berlinTime->format('H:i')} Uhr</td>";
+        $text .= $includeTimeFrame
+            ? "<td>{$report->timeFrame->startTime->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('H:i')}</td><td>{$report->timeFrame->endTime->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('H:i')}</td>"
+            : "<td>{$berlinTime->format('H:i')} Uhr</td>";
         $text .= <<<EOD
                     <td>{$report->stink->kind}</td>
                     <td>{$report->stink->intensity}</td>
