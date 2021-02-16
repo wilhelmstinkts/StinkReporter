@@ -27,7 +27,9 @@ jobs:
             docker exec mysql mysql -p3306 -h127.0.0.1 -uroot -ptotallyunsafe --execute="\. /commands/create_tables.sql"
     - name: Prepare Api Tests
       working-directory: ./apitests
-      run: pip install tavern
+      run: |
+        sudo apt-get install php-mysql
+        pip install tavern
     - name: Run Api Tests
       working-directory: ./apitests
       run: ./run-api-tests.sh
