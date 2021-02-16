@@ -5,7 +5,7 @@ namespace OpenAPIServer\DTOs;
 class Report implements \JsonSerializable
 {
     public \DateTime $time;
-    public ?TimeFrame $timeFrame;
+    public ?TimeFrame $timeFrame = null;
     public Location $location;
     public Stink $stink;
     public ?Reporter $reporter;
