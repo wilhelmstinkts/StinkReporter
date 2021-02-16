@@ -45,6 +45,7 @@ class MailService
         $berlinTime = $report->time->setTimezone(new \DateTimeZone('Europe/Berlin'));
         $coordinates = $report->location->coordinates;
         $temperatureCelsius = $report->weather->temperature - 273.15;
+        $includeTimeFrame = !is_null($report->timeFrame);
 
         $text = <<<EOD
         <p>Sehr geehrte Damen und Herren,</p>
@@ -53,14 +54,19 @@ class MailService
             <thead>
                 <tr>
                     <th rowspan=2>Datum</th>
-                    <th rowspan=2>Uhrzeit</th>
+        EOD;
+        $text .= $includeTimeFrame ? "<th colspan=2>Uhrzeit</th>" : "<th rowspan=2>Uhrzeit</th>";
+        $text .= <<<EOD
                     <th rowspan=2>Geruchsart</th>
                     <th rowspan=2>Geruchsintensität</th>
                     <th colspan=2>Ort</th>
                     <th colspan=3>Wind</th>
                     <th rowspan=2>Temperatur</th>
                 </tr>
-                <tr>                    
+                <tr>
+        EOD;
+        $text .= $includeTimeFrame ? "<th>Von</th><th>Bis</th>" : "";
+        $text .= <<<EOD
                     <th>Adresse</th>
                     <th>Koordinaten</th>
                     <th>Richtung</th>
@@ -71,7 +77,9 @@ class MailService
             <tbody>
                 <tr>
                     <td>{$berlinTime->format('d.m.Y')}</td>
-                    <td>{$berlinTime->format('H:i')} Uhr</td>
+        EOD;
+        $text .= $includeTimeFrame ? "<td>{$report->timeFrame->startTime->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('H:i')}</td><td>{$report->timeFrame->endTime->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('H:i')}</td>" : "<td>{$berlinTime->format('H:i')} Uhr</td>";
+        $text .= <<<EOD
                     <td>{$report->stink->kind}</td>
                     <td>{$report->stink->intensity}</td>
         EOD;
