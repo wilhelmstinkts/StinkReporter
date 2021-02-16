@@ -32,4 +32,6 @@ jobs:
         pip install tavern
     - name: Run Api Tests
       working-directory: ./apitests
-      run: ./run-api-tests.sh
+      run: |
+        docker ps
+        ./run-api-tests.sh
