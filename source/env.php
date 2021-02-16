@@ -12,7 +12,7 @@ class Environment
 
     public static function reportRepository(): \OpenAPIServer\Repositories\ReportRepository
     {
-        return new \OpenAPIServer\Repositories\ReportRepository("mysql:dbname=stink_db;host=172.17.0.2", "root", "totallyunsafe");
+        return new \OpenAPIServer\Repositories\ReportRepository("mysql:dbname=stink_db;host=mysql", "root", "totallyunsafe");
     }
 
     public static function skipMail(): bool
