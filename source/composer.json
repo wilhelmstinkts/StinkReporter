@@ -1,4 +1,9 @@
 {
+  "config": {
+    "platform": {
+      "php": "7.4.14"
+    }
+  },
   "minimum-stability": "RC",
   "repositories": [
     {
@@ -19,13 +24,17 @@
     "squizlabs/php_codesniffer": "^3.5"
   },
   "autoload": {
-    "psr-4": { "OpenAPIServer\\": [
-      "lib/",
-      "src/"
-    ]}
+    "psr-4": {
+      "OpenAPIServer\\": [
+        "lib/",
+        "src/"
+      ]
+    }
   },
   "autoload-dev": {
-    "psr-4": { "OpenAPIServer\\": "test/" }
+    "psr-4": {
+      "OpenAPIServer\\": "test/"
+    }
   },
   "scripts": {
     "test": [
