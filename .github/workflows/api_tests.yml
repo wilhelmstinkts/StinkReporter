@@ -22,7 +22,7 @@ jobs:
     - name: Prepare Database
       working-directory: ./infrastructure
       run: |
-            docker run -v ./sql:/commands --rm -d --name mysql -e MYSQL_ROOT_PASSWORD=totallyunsafe mysql:5.7.28
+            docker run -v $(pwd)/sql:/commands --rm -d --name mysql -e MYSQL_ROOT_PASSWORD=totallyunsafe mysql:5.7.28
             docker exec mysql mysql -uroot -ptotallyunsafe --execute="\. /commands/create_tables.sql"
     - name: Prepare Api Tests
       working-directory: ./apitests
