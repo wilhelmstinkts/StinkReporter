@@ -9,12 +9,12 @@ jobs:
     steps:
       - name: Checkout head
         uses: actions/checkout@v2
+      - name: Run the app
+        run: docker-compose up
       - name: Install requirements
-        working-directory: ./source
-        run: composer update
+        run: docker-compose exec apache composer update
       - name: Unit Tests
-        working-directory: ./source
-        run: composer test
+        run: docker-compose exec apache composer test
       - name: Linting
         working-directory: ./source
-        run: composer phpcs
+        run: docker-compose exec apache composer phpcs
