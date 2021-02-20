@@ -2,14 +2,14 @@ test_name: Happy path
 stages:
   - name: When there are no reports stored, return empty array
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: GET
     response:
       status_code: 200
 
   - name: Post a report without time frame
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -34,7 +34,7 @@ stages:
 
   - name: Get previously stored entry
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: GET
     response:
       status_code: 200
@@ -56,7 +56,7 @@ stages:
 
   - name: Post a report with time frame
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -84,7 +84,7 @@ stages:
 
   - name: Get both previously stored entries
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: GET
     response:
       status_code: 200

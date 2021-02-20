@@ -3,14 +3,14 @@ test_name: Client errors
 stages:
   - name: Missing request body
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
     response:
       status_code: 400
 
   - name: Missing report
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         falseKey: 5
@@ -21,7 +21,7 @@ stages:
 
   - name: Missing location
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -38,7 +38,7 @@ stages:
 
   - name: Missing coordinates
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -61,7 +61,7 @@ stages:
 
   - name: Coordinates outside Wilhelmsruh
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -81,7 +81,7 @@ stages:
 
   - name: IsHome not boolean
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -109,7 +109,7 @@ stages:
 
   - name: Missing stink
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -129,7 +129,7 @@ stages:
 
   - name: Missing reporter
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -149,7 +149,7 @@ stages:
 
   - name: Start after end
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
