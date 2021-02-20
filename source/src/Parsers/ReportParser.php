@@ -24,12 +24,12 @@ class ReportParser
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
         $weatherService = \Environment\Environment::weatherService();
-        if (is_null($report["timeframe"])) {
+        if (is_null($report["timeFrame"])) {
             $time = new DateTime("now", new \DateTimeZone("UTC"));
             $weather = $weatherService->getCurrentWeather($location->coordinates);
             return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
         }
-        $timeFrame = ReportParser::parseTimeFrame($report["timeframe"]);
+        $timeFrame = ReportParser::parseTimeFrame($report["timeFrame"]);
         $weather = $weatherService->getHistoricWeather($location->coordinates, $timeFrame->averageTime());
         return \OpenAPIServer\DTOs\Report::createWithTimeFrame($location, $timeFrame, $stink, $weather, $reporter);
     }
@@ -68,9 +68,9 @@ class ReportParser
     {
         $timeFrameSchema = \OpenAPIServer\Model\TimeFrame::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($timeFrameSchema, $timeframe);
-        $startTime = DateTime::createFromFormat(DateTime::ISO8601, $timeframe["startTime"]);
-        $endTime = DateTime::createFromFormat(DateTime::ISO8601, $timeframe["endTime"]);
-        return new  \OpenAPIServer\DTOs\TimeFrame($startTime, $endTime);
+        $startTime = \OpenAPIServer\Parsers\TimeParser::parseTime($timeframe["startTime"]);
+        $endTime = \OpenAPIServer\Parsers\TimeParser::parseTime($timeframe["endTime"]);
+        return new \OpenAPIServer\DTOs\TimeFrame($startTime, $endTime);
     }
 
     private static function parseLocation($location): \OpenAPIServer\DTOs\Location
