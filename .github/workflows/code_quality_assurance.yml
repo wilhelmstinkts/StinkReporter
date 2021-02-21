@@ -12,9 +12,9 @@ jobs:
       - name: Run the app
         run: docker-compose up -d
       - name: Install requirements
-        run: docker-compose exec -d apache composer update
+        run: docker-compose exec -T apache composer update
       - name: Unit Tests
-        run: docker-compose exec -d apache composer test
+        run: docker-compose exec -T apache composer test
       - name: Linting
         working-directory: ./source
-        run: docker-compose exec -d apache composer phpcs
+        run: docker-compose exec -T apache composer phpcs

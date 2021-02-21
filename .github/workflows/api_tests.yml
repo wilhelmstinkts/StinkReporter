@@ -12,9 +12,9 @@ jobs:
     - name: Run the app
       run: docker-compose up -d
     - name: Install requirements
-      run: docker-compose exec -d apache composer update --no-dev --no-scripts
+      run: docker-compose exec -T apache composer update --no-dev --no-scripts
     - name: Delete unit tests
       working-directory: ./source
       run: rm -r ./test
     - name: Run Api Tests
-      run: docker-compose run -d tavern /apitests/run-api-tests.sh
+      run: docker-compose run -T tavern /apitests/run-api-tests.sh
