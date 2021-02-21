@@ -4,6 +4,7 @@
         <testsuite name="UnitTests">
             <directory>./test/Services</directory>
             <directory>./test/Parsers</directory>
+            <directory>./test/DTOs</directory>
         </testsuite>
     </testsuites>
 </phpunit>
