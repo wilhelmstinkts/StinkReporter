@@ -11,7 +11,7 @@ class TimeParserTest extends TestCase
         $isoString = "2020-01-05T18:45:30.456Z";
         $expected = new \DateTime($isoString);
         $parsed = \OpenAPIServer\Parsers\TimeParser::parseTime($isoString);
-        
+
         $this->assertEquals($expected, $parsed);
     }
 
@@ -28,6 +28,6 @@ class TimeParserTest extends TestCase
     {
         $invalid = "notATime";
         $this->expectException(\InvalidArgumentException::class);
-        \OpenAPIServer\Parsers\TimeParser::parseTime($invalid);        
+        \OpenAPIServer\Parsers\TimeParser::parseTime($invalid);
     }
 }

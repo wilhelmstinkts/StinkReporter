@@ -27,4 +27,15 @@ class WeatherServiceTest extends TestCase
         $this->assertEquals(2.1, $parsed->wind->speed);
         $this->assertEquals(7.6, $parsed->wind->gustSpeed);
     }
+
+    public function testBuildRequestUri()
+    {
+        $weatherService = new \OpenAPIServer\Services\WeatherService("http://base.com", "key123");
+        $time = new \DateTime('1970-01-01T00:00:01Z');
+        $coordinates = new \OpenAPIServer\DTOs\Coordinates(1, 1);
+
+        $expectedRequest = "http://base.com/onecall/timemachine?lat=1&lon=1&dt=1&APPID=key123";
+
+        $this->assertEquals($expectedRequest, $weatherService->buildHistoricRequestUri($coordinates, $time));
+    }
 }

@@ -62,17 +62,17 @@ stages:
         report:
           location:
             coordinates:
-              latitude: 52.587516
-              longitude: 13.362886
+              latitude: 52.5843752
+              longitude: 13.3674994
             address:
-              street: "Garibaldistraße"
-              number: "7A"
+              street: "Hertzstraße"
+              number: "3"
               zip: "13158"
               city: "Berlin"
               country: "Germany"
           stink:
-            kind: "Biomüll"
-            intensity: 3
+            kind: "Gießerei"
+            intensity: 4
           reporter:
             name: "Jane Doe"
             email: "jane.doe@provider.org"
@@ -105,15 +105,15 @@ stages:
             intensity: 3
         - location:
             coordinates:
-              latitude: 52.587516
-              longitude: 13.362886
+              latitude: 52.5843752
+              longitude: 13.3674994
             address:
-              street: "Garibaldistraße"
-              number: "7A"
+              street: "Hertzstraße"
+              number: "3"
               zip: "13158"
               city: "Berlin"
               country: "Germany"
           stink:
-            kind: "Biomüll"
-            intensity: 3
-          time: "2021-01-25T20:30:00.000Z"
+            kind: "Gießerei"
+            intensity: 4
+          time: "2021-01-25T20:30:00+0000"
