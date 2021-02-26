@@ -26,8 +26,9 @@ class ReportRepository
     {
         $sql = "CALL InsertReport(:time, :stinkKind, :intensity, ST_GeomFromText(:coordinates, 4326), :street, :number, :zip, :city, :country, :temperature, :windDirection, :windSpeed, :windGustSpeed)";
         $statement = $this->pdo->prepare($sql);
+        $timeToSave = $report->time ?? $report->timeFrame->averageTime();
         $success = $statement->execute(array(
-            ':time' =>  $report->time->format(ReportRepository::dateFormat()),
+            ':time' =>  $timeToSave->format(ReportRepository::dateFormat()),
             ':stinkKind' => $report->stink->kind,
             ':intensity' => $report->stink->intensity,
             ':coordinates' => "POINT({$report->location->coordinates->latitude} {$report->location->coordinates->longitude})",
@@ -120,12 +121,6 @@ class ReportRepository
 
         $datetime =  \DateTime::createFromFormat(ReportRepository::dateFormat(), $inputArray["time"], new \DateTimeZone("UTC"));
 
-        return new \OpenAPIServer\DTOs\Report(
-            $location,
-            $datetime,
-            $stink,
-            $weather,
-            null
-        );
+        return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $datetime, null);
     }
 }

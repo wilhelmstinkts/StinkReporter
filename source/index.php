@@ -12,7 +12,7 @@
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/env.php';
+require_once 'env.php';
 
 use OpenAPIServer\SlimRouter;
 use Psr\Http\Message\ServerRequestInterface;

@@ -2,14 +2,14 @@ test_name: Happy path
 stages:
   - name: When there are no reports stored, return empty array
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: GET
     response:
       status_code: 200
 
-  - name: Post a report
+  - name: Post a report without time frame
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
@@ -34,7 +34,7 @@ stages:
 
   - name: Get previously stored entry
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: GET
     response:
       status_code: 200
@@ -53,3 +53,67 @@ stages:
           stink:
             kind: "Biomüll"
             intensity: 3
+
+  - name: Post a report with time frame
+    request:
+      url: http://apache/api/v0/report
+      method: POST
+      json:
+        report:
+          location:
+            coordinates:
+              latitude: 52.5843752
+              longitude: 13.3674994
+            address:
+              street: "Hertzstraße"
+              number: "3"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Gießerei"
+            intensity: 4
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+          timeFrame:
+            startTime: "2021-01-25T20:00:00.000Z"
+            endTime: "2021-01-25T21:00:00.000Z"
+    response:
+      status_code: 201
+
+  - name: Get both previously stored entries
+    request:
+      url: http://apache/api/v0/report
+      method: GET
+    response:
+      status_code: 200
+      strict: no
+      json:
+        - location:
+            coordinates:
+              latitude: 52.587516
+              longitude: 13.362886
+            address:
+              street: "Garibaldistraße"
+              number: "7A"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+        - location:
+            coordinates:
+              latitude: 52.5843752
+              longitude: 13.3674994
+            address:
+              street: "Hertzstraße"
+              number: "3"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Gießerei"
+            intensity: 4
+          time: "2021-01-25T20:30:00+0000"

@@ -30,6 +30,8 @@ paths:
                 captchaToken:
                   type: string
                   description: "The token assigned by the captcha provider"
+              required:
+                - report
       responses:
         "201":
           description: "Message saved"
@@ -177,6 +179,8 @@ components:
         - $ref: "#/components/schemas/baseReport"
       type: object
       properties:
+        timeFrame:
+          $ref: "#/components/schemas/timeFrame"
         reporter:
           $ref: "#/components/schemas/reporter"
       required:
@@ -188,10 +192,21 @@ components:
       properties:
         time:
           type: string
-          format: datetime
-          example: "2020-03-10T12:00:00Z"
+          format: date-time
         weather:
           $ref: "#/components/schemas/weather"
       required:
-        - time
         - weather
+        - time
+    timeFrame:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+      required:
+        - startTime
+        - endTime

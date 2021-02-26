@@ -3,14 +3,14 @@ test_name: Client errors
 stages:
   - name: Missing request body
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
     response:
       status_code: 400
 
   - name: Missing report
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         falseKey: 5
@@ -21,11 +21,10 @@ stages:
 
   - name: Missing location
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
-          time: "2000-01-01T12:00:00Z"
           stink:
             kind: "Biomüll"
             intensity: 3
@@ -39,11 +38,10 @@ stages:
 
   - name: Missing coordinates
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
-          time: "2000-01-01T12:00:00Z"
           location:
             street: "Kriemhildstraße"
             number: "2-18"
@@ -63,11 +61,10 @@ stages:
 
   - name: Coordinates outside Wilhelmsruh
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
-          time: "2000-01-01T12:00:00Z"
           location:
             longitude: 58.8004358
             latitude: 5.7053571
@@ -84,11 +81,10 @@ stages:
 
   - name: IsHome not boolean
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
-          time: "2000-01-01T12:00:00Z"
           location:
             coordinates:
               latitude: 52.587516
@@ -113,11 +109,10 @@ stages:
 
   - name: Missing stink
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
-          time: "2000-01-01T12:00:00Z"
           location:
             street: "Garibaldistraße"
             number: "7A"
@@ -134,11 +129,10 @@ stages:
 
   - name: Missing reporter
     request:
-      url: http://localhost:8080/api/v0/report
+      url: http://apache/api/v0/report
       method: POST
       json:
         report:
-          time: "2000-01-01T12:00:00Z"
           location:
             street: "Garibaldistraße"
             number: "7A"
@@ -148,6 +142,29 @@ stages:
           stink:
             kind: "Biomüll"
             intensity: 3
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Start after end
+    request:
+      url: http://apache/api/v0/report
+      method: POST
+      json:
+        report:
+          location:
+            street: "Garibaldistraße"
+            number: "7A"
+            zip: "13158"
+            city: "Berlin"
+            country: "Germany"
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          timeFrame:
+            startTime: "2021-01-25T20:48:00.000Z"
+            endTime: "2021-01-24T20:48:00.000Z"
       headers:
         content-type: application/json
     response:
