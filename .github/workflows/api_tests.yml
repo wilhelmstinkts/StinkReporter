@@ -9,29 +9,12 @@ jobs:
    steps:
     - name: Checkout head
       uses: actions/checkout@v2
+    - name: Run the app
+      run: docker-compose up -d
     - name: Install requirements
-      working-directory: ./source
-      run: composer update --no-dev --no-scripts
+      run: docker-compose exec -T apache composer update --no-dev --no-scripts
     - name: Delete unit tests
       working-directory: ./source
       run: rm -r ./test
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-    - name: Prepare Database
-      working-directory: ./utils
-      run: |
-            chmod +x ./start-my-sql-in-docker.sh
-            ./start-my-sql-in-docker.sh
-            docker exec mysql mysql -uroot -ptotallyunsafe --execute="\. /commands/create_tables.sql"
-    - name: Prepare Api Tests
-      working-directory: ./apitests
-      run: |
-            sudo apt-get install dos2unix
-            dos2unix ./*
-            chmod +x ./run-api-tests.sh
-            pip install tavern
     - name: Run Api Tests
-      working-directory: ./apitests
-      run: ./run-api-tests.sh
+      run: docker-compose run -T tavern /apitests/run-api-tests.sh

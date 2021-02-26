@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ReportInput
+ * TimeFrame
  *
  * PHP version 7.1
  *
@@ -19,43 +19,36 @@ namespace OpenAPIServer\Model;
 use OpenAPIServer\Interfaces\ModelInterface;
 
 /**
- * ReportInput
+ * TimeFrame
  *
  * @package OpenAPIServer\Model
  * @author  OpenAPI Generator team
  * @link    https://github.com/openapitools/openapi-generator
  */
-class ReportInput implements ModelInterface
+class TimeFrame implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
-  "required" : [ "reporter" ],
+  "required" : [ "endTime", "startTime" ],
   "type" : "object",
   "properties" : {
-    "timeFrame" : {
-      "$ref" : "#/components/schemas/timeFrame"
+    "startTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "reporter" : {
-      "$ref" : "#/components/schemas/reporter"
+    "endTime" : {
+      "type" : "string",
+      "format" : "date-time"
     }
-  },
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/baseReport"
-  } ]
+  }
 }
 SCHEMA;
 
-    /** @var \OpenAPIServer\Model\TimeFrame $timeFrame */
-    private $timeFrame;
+    /** @var \DateTime $startTime */
+    private $startTime;
 
-    /** @var \OpenAPIServer\Model\Reporter $reporter */
-    private $reporter;
-
-    /** @var \OpenAPIServer\Model\BaseReportLocation $location */
-    private $location;
-
-    /** @var \OpenAPIServer\Model\Stink $stink */
-    private $stink;
+    /** @var \DateTime $endTime */
+    private $endTime;
 
     /**
      * Returns model schema.

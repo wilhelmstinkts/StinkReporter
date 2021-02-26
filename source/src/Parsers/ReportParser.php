@@ -21,12 +21,17 @@ class ReportParser
         $reportSchema = \OpenAPIServer\Model\ReportInput::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reportSchema, $report);
         $location = ReportParser::parseLocation($report["location"]);
-        $weatherService = \Environment\Environment::weatherService();
-        $weather = $weatherService->getWeather($location->coordinates);
-        $time = new DateTime("now", new \DateTimeZone("UTC"));
         $stink = ReportParser::parseStink($report["stink"]);
         $reporter = ReportParser::parseReporter($report["reporter"]);
-        return new \OpenAPIServer\DTOs\Report($location, $time, $stink, $weather, $reporter);
+        $weatherService = \Environment\Environment::weatherService();
+        if (is_null($report["timeFrame"])) {
+            $time = new DateTime("now", new \DateTimeZone("UTC"));
+            $weather = $weatherService->getCurrentWeather($location->coordinates);
+            return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
+        }
+        $timeFrame = ReportParser::parseTimeFrame($report["timeFrame"]);
+        $weather = $weatherService->getHistoricWeather($location->coordinates, $timeFrame->averageTime());
+        return \OpenAPIServer\DTOs\Report::createWithTimeFrame($location, $timeFrame, $stink, $weather, $reporter);
     }
 
     private static function throwOnMissingProps(array $schema, $given)
@@ -57,6 +62,15 @@ class ReportParser
         $reporterSchema = \OpenAPIServer\Model\Reporter::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reporterSchema, $reporter);
         return new  \OpenAPIServer\DTOs\Reporter($reporter["name"], $reporter["email"]);
+    }
+
+    private static function parseTimeFrame(array $timeframe): \OpenAPIServer\DTOs\TimeFrame
+    {
+        $timeFrameSchema = \OpenAPIServer\Model\TimeFrame::getOpenApiSchema(true);
+        ReportParser::throwOnMissingProps($timeFrameSchema, $timeframe);
+        $startTime = \OpenAPIServer\Parsers\TimeParser::parseTime($timeframe["startTime"]);
+        $endTime = \OpenAPIServer\Parsers\TimeParser::parseTime($timeframe["endTime"]);
+        return new \OpenAPIServer\DTOs\TimeFrame($startTime, $endTime);
     }
 
     private static function parseLocation($location): \OpenAPIServer\DTOs\Location

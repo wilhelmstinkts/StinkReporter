@@ -29,6 +29,7 @@ class InlineObject implements ModelInterface
 {
     private const MODEL_SCHEMA = <<<'SCHEMA'
 {
+  "required" : [ "report" ],
   "type" : "object",
   "properties" : {
     "report" : {
