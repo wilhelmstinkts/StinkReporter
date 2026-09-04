@@ -11,10 +11,33 @@ jobs:
       uses: actions/checkout@v2
     - name: Run the app
       run: docker compose up -d
+    - name: Wait for the app to be ready
+      # docker compose up -d returns as soon as the containers start, not
+      # once mysql has finished initializing - the very first request(s) can
+      # otherwise hit a 500 (or worse, a request mid-startup can come back
+      # with the wrong status). Poll until a real request succeeds.
+      run: |
+        for i in $(seq 1 30); do
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/v0/report || echo 000)
+          [ "$code" = "200" ] && break
+          echo "waiting for the app to come up... (try $i, got $code)"
+          sleep 2
+        done
     - name: Install requirements
       run: docker compose exec -T apache composer update --no-dev --no-scripts
     - name: Delete unit tests
       working-directory: ./source
       run: rm -r ./test
+    - name: Warm up and reset the database
+      # The container's very first request through the historic-weather
+      # code path can still be slow enough to flake even after the app
+      # responds to plain GETs (seen locally: ~1 in 3 cold runs). One real
+      # request warms PHP's opcache and MySQL's stored-procedure cache;
+      # reset the DB afterwards so the actual test suite starts clean.
+      run: |
+        curl -s -o /dev/null -X POST http://localhost:8080/api/v0/report \
+          -H 'content-type: application/json' \
+          -d '{"report":{"location":{"coordinates":{"latitude":52.587516,"longitude":13.362886}},"stink":{"kind":"warmup","intensity":1},"reporter":{"name":"CI","email":"ci@example.org"},"timeFrame":{"startTime":"2021-01-25T20:00:00.000Z","endTime":"2021-01-25T21:00:00.000Z"}}}'
+        docker compose exec -T mysql sh -c 'mysql -uroot -ptotallyunsafe -e "DROP DATABASE IF EXISTS stink_db"; mysql -uroot -ptotallyunsafe < /docker-entrypoint-initdb.d/create_tables.sql'
     - name: Run Api Tests
       run: docker compose run -T tavern /apitests/run-api-tests.sh
