@@ -14,17 +14,17 @@ class ReportParser
 {
     public static function parseBodyToReport(array $body): \OpenAPIServer\DTOs\Report
     {
-        if (is_null($body["report"])) {
+        if (is_null($body["report"] ?? null)) {
             throw new Exception("Missing object report in the request body", 1);
         }
         $report = $body["report"];
         $reportSchema = \OpenAPIServer\Model\ReportInput::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reportSchema, $report);
-        $location = ReportParser::parseLocation($report["location"]);
-        $stink = ReportParser::parseStink($report["stink"]);
-        $reporter = ReportParser::parseReporter($report["reporter"]);
+        $location = ReportParser::parseLocation($report["location"] ?? null);
+        $stink = ReportParser::parseStink($report["stink"] ?? null);
+        $reporter = ReportParser::parseReporter($report["reporter"] ?? null);
         $weatherService = \Environment\Environment::weatherService();
-        if (is_null($report["timeFrame"])) {
+        if (is_null($report["timeFrame"] ?? null)) {
             $time = new DateTime("now", new \DateTimeZone("UTC"));
             $weather = $weatherService->getCurrentWeather($location->coordinates);
             return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
@@ -42,7 +42,7 @@ class ReportParser
         }
 
         foreach ($schema["properties"] as $propertyName => $value) {
-            if (is_null($given[$propertyName])) {
+            if (is_null($given[$propertyName] ?? null)) {
                 if (in_array($propertyName, $schema["required"])) {
                     throw new Exception("Required attribute $propertyName missing.");
                 }
@@ -50,21 +50,21 @@ class ReportParser
         }
     }
 
-    private static function parseStink(array $stink): \OpenAPIServer\DTOs\Stink
+    private static function parseStink($stink): \OpenAPIServer\DTOs\Stink
     {
         $stinkSchema = \OpenAPIServer\Model\Stink::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($stinkSchema, $stink);
         return new  \OpenAPIServer\DTOs\Stink($stink["kind"], $stink["intensity"]);
     }
 
-    private static function parseReporter(array $reporter): \OpenAPIServer\DTOs\Reporter
+    private static function parseReporter($reporter): \OpenAPIServer\DTOs\Reporter
     {
         $reporterSchema = \OpenAPIServer\Model\Reporter::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($reporterSchema, $reporter);
         return new  \OpenAPIServer\DTOs\Reporter($reporter["name"], $reporter["email"]);
     }
 
-    private static function parseTimeFrame(array $timeframe): \OpenAPIServer\DTOs\TimeFrame
+    private static function parseTimeFrame($timeframe): \OpenAPIServer\DTOs\TimeFrame
     {
         $timeFrameSchema = \OpenAPIServer\Model\TimeFrame::getOpenApiSchema(true);
         ReportParser::throwOnMissingProps($timeFrameSchema, $timeframe);
@@ -80,9 +80,9 @@ class ReportParser
             throw new Exception("Expected an object as location but got $location with type $type", 1);
         }
         $adress = null;
-        $adressArray = $location["address"];
-        $coordinatesArray = $location["coordinates"];
-        $isHome = $location["isHome"];
+        $adressArray = $location["address"] ?? null;
+        $coordinatesArray = $location["coordinates"] ?? null;
+        $isHome = $location["isHome"] ?? null;
         if (!is_null($isHome) && !is_bool($isHome)) {
             $type = gettype($isHome);
             throw new Exception("Expected a boolean for isHome but got type $type", 1);
@@ -107,26 +107,32 @@ class ReportParser
         $_validCities = ["Berlin"];
         $_validZips = ["13158"];
 
-        if (!in_array($address["country"], $_validStates)) {
+        if (!in_array($address["country"] ?? null, $_validStates)) {
             throw new Exception("We currently only support " . implode(",", $_validStates), 1);
         }
 
-        if (!in_array($address["city"], $_validCities)) {
+        if (!in_array($address["city"] ?? null, $_validCities)) {
             throw new Exception("We currently only support " . implode(",", $_validCities), 1);
         }
-        if (!in_array($address["zip"], $_validZips)) {
+        if (!in_array($address["zip"] ?? null, $_validZips)) {
             throw new Exception("We currently only support " . implode(",", $_validZips), 1);
         }
 
-        return new \OpenAPIServer\DTOs\Address($address["street"], $address["number"], $address["zip"], $address["city"], $address["country"]);
+        return new \OpenAPIServer\DTOs\Address(
+            $address["street"] ?? null,
+            $address["number"] ?? null,
+            $address["zip"] ?? null,
+            $address["city"] ?? null,
+            $address["country"] ?? null
+        );
     }
 
     private static function parseAndValidateCoordinates($coordinates): \OpenAPIServer\DTOs\Coordinates
     {
         $_southNorthBorders = [52.58,  52.5933];
         $_eastWestBorders = [13.3466, 13.375];
-        $longitude = $coordinates["longitude"];
-        $latitude = $coordinates["latitude"];
+        $longitude = $coordinates["longitude"] ?? null;
+        $latitude = $coordinates["latitude"] ?? null;
 
         $valid = $longitude >= $_eastWestBorders[0] && $longitude <= $_eastWestBorders[1] && $latitude >= $_southNorthBorders[0] && $latitude <= $_southNorthBorders[1];
 

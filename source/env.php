@@ -461,7 +461,40 @@ class Environment
         }
         EOD;
 
-        return \OpenAPIServer\Services\WeatherService::createMock("https://samples.openweathermap.org/data/2.5", $mock);
+        $currentMock = <<<EOD
+        {
+            "coord": { "lon": 13.3629, "lat": 52.5875 },
+            "weather": [
+                { "id": 800, "main": "Clear", "description": "clear sky", "icon": "01d" }
+            ],
+            "base": "stations",
+            "main": {
+                "temp": 290.55,
+                "feels_like": 291.17,
+                "temp_min": 289.82,
+                "temp_max": 292.04,
+                "pressure": 1008,
+                "humidity": 93
+            },
+            "visibility": 10000,
+            "wind": { "speed": 2.1, "deg": 50 },
+            "clouds": { "all": 0 },
+            "dt": 1598809682,
+            "sys": {
+                "type": 1,
+                "id": 1275,
+                "country": "DE",
+                "sunrise": 1598760878,
+                "sunset": 1598810396
+            },
+            "timezone": 7200,
+            "id": 2844910,
+            "name": "Wilhelmsruh",
+            "cod": 200
+        }
+        EOD;
+
+        return \OpenAPIServer\Services\WeatherService::createMock("https://samples.openweathermap.org/data/2.5", $mock, $currentMock);
     }
 
     public static function reportRepository(): \OpenAPIServer\Repositories\ReportRepository

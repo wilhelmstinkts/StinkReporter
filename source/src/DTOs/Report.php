@@ -27,7 +27,7 @@ class Report implements \JsonSerializable
         return $instance;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $serialized = [
             'location' => $this->location,
