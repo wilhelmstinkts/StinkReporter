@@ -10,11 +10,48 @@ jobs:
     - name: Checkout head
       uses: actions/checkout@v2
     - name: Run the app
-      run: docker-compose up -d
+      run: docker compose up -d
+    - name: Wait for the app to be ready
+      # docker compose up -d returns as soon as the containers start, not
+      # once mysql has finished initializing - the very first request(s) can
+      # otherwise hit a 500 (or worse, a request mid-startup can come back
+      # with the wrong status). Poll until a real request succeeds.
+      run: |
+        for i in $(seq 1 30); do
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/v0/report || echo 000)
+          [ "$code" = "200" ] && echo "app is up (try $i)" && break
+          echo "waiting for the app to come up... (try $i, got $code)"
+          sleep 2
+        done
+        # Give the stack a moment to settle once it first answers.
+        sleep 5
     - name: Install requirements
-      run: docker-compose exec -T apache composer update --no-dev --no-scripts
+      run: docker compose exec -T apache composer update --no-dev --no-scripts
     - name: Delete unit tests
       working-directory: ./source
       run: rm -r ./test
+    - name: Warm up the report code path
+      # The wait above only exercises GET. The first POST through the
+      # parser/weather/insert path is markedly slower than later ones and
+      # has been seen returning the wrong status code, which fails the
+      # suite. Fire one throwaway report so the real tests never hit a
+      # cold path - its outcome is deliberately ignored.
+      run: |
+        curl -s -m 60 -o /dev/null -w "warm-up returned %{http_code}\n" \
+          -X POST http://localhost:8080/api/v0/report \
+          -H 'content-type: application/json' \
+          -d '{"report":{"location":{"coordinates":{"latitude":52.587516,"longitude":13.362886}},"stink":{"kind":"warmup","intensity":1},"reporter":{"name":"CI","email":"ci@example.org"},"timeFrame":{"startTime":"2021-01-25T20:00:00.000Z","endTime":"2021-01-25T21:00:00.000Z"}}}' \
+          || true
+    - name: Reset the database
+      # The warm-up wrote a row, but the suite starts by asserting that no
+      # reports are stored. Connect over TCP instead of the unix socket.
+      run: |
+        docker compose exec -T mysql mysql -h 127.0.0.1 -uroot -ptotallyunsafe -e "DROP DATABASE IF EXISTS stink_db"
+        docker compose exec -T mysql sh -c 'mysql -h 127.0.0.1 -uroot -ptotallyunsafe < /docker-entrypoint-initdb.d/create_tables.sql'
+    - name: Verify the database is empty
+      run: |
+        body=$(curl -s http://localhost:8080/api/v0/report)
+        echo "GET /api/v0/report -> $body"
+        [ "$body" = "[]" ] || { echo "expected an empty report list before the tests"; exit 1; }
     - name: Run Api Tests
-      run: docker-compose run -T tavern /apitests/run-api-tests.sh
+      run: docker compose run -T tavern /apitests/run-api-tests.sh
