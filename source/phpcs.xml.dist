@@ -27,5 +27,7 @@
         <exclude name="Generic.Files.LineLength.TooLong" />
         <!-- Codegen generates variables with underscore on purpose -->
         <exclude name="PSR2.Classes.PropertyDeclaration.Underscore" />
+        <!-- The openapi-generator templates put a blank line after the class brace -->
+        <exclude name="PSR12.Classes.OpeningBraceSpace.Found" />
     </rule>
 </ruleset>
