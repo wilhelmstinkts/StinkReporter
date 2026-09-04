@@ -1,0 +1,20 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Arne -- Ideation
+    [Pixelbaker](https://github.com/pixelbaker) -- Code Reviews & Server Sponsor
+    [Mailantonia](https://github.com/mailantonia) -- Design & Software Development
+    [PhilippJust](https://github.com/PhilippJust) -- DevOps & Software Development
+
+# THANKS
+
+    Wilhelm gibt keine Ruh
+
+# TECHNOLOGY COLOPHON
+
+    CSS3, HTML5
+    Modernizr, Normalize.css
+    PHP, MySql
+    Cucumber

@@ -1,0 +1,433 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>Frischluftheld:in</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <!-- Place favicon.ico in the root directory -->
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/form.css?v=2">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source%20Sans%20Pro">
+
+  <meta name="theme-color" content="#fafafa">
+  <script type="text/javascript" src="js/services/locationService.js"></script>
+  <script type="text/javascript" src="js/services/reportService.js"></script>
+  <script type="text/javascript" src="js/services/weatherService.js"></script>
+  <script type="text/javascript" src="js/services/mailTemplater.js"></script>
+  <script type="text/javascript" src="js/exceptions/addressNotFoundException.js"></script>
+  <script type="text/javascript" src="js/exceptions/positionNotSupportedException.js"></script>
+  <script type="text/javascript" src="js/exceptions/startBeforeEndException.js"></script>
+  <script type="text/javascript" src="js/views/mapView.js"></script>
+  <script type="text/javascript" src="js/lib/openLayer.js"></script>
+  <script type="text/javascript" src="js/lib/uaParser.js"></script>
+</head>
+
+<body onload="setDefaults()">
+  <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+  <div id="overlay" onclick="hideOverlay()">
+    <p id="submitStatus"></p>
+  </div>
+  <form id="form" autocomplete="on" onsubmit="return false">
+    <h3>Deine Kontaktdaten</h3>
+    <div class="formRow">
+      <input type="text" style="flex:1;" id="inputGivenName" name="fname" placeholder="Vorname" required minlength="2"
+        autocomplete="given-name" />
+      <input type="text" style="flex:2;" id="inputSurname" name="lname" placeholder="Nachname" required minlength="2"
+        autocomplete="family-name" />
+    </div>
+    <div class="formRow">
+      <input type="email" id="inputEmail" style="width: 100%;" name="email" placeholder="E-Mailadresse" required
+        minlength="2" autocomplete="email" />
+    </div>
+    <h3>Ort des Gestanks</h3>
+    <button id="buttonPositiontoggle" name="notAdress" type="button" onclick="getLocation()">Meine Position
+      verwenden</button>
+    <div class="formRow">
+      <input type="text" id="inputStreet" style="flex:3;" name="street" placeholder="Straße" required minlength="2"
+        onchange="updateCoordinates()" />
+      <input type="text" id="inputNumber" style="flex:1;" name="number" placeholder="Hausnummer" required
+        onchange="updateCoordinates()" />
+      <input type="hidden" id="inputLatitude" />
+      <input type="hidden" id="inputLongitude" />
+    </div>
+    <div class="formRow">
+      <input type="checkbox" id="checkIsHome" style="flex:1;" name="isHome" />
+      <label style="flex: 20;" for="checkIsHome">
+        Die angegebene Adresse ist meine Wohnanschrift.
+      </label>
+    </div>
+    <p id="positionDisplay" hidden></p>
+    <div id="map"></div>
+    <div class="formRow" id="mapAttribution"></div>
+    <div id="weatherDisplay" hidden></div>
+    <div class="formRow">
+      <input type="checkbox" id="checkHeatmap" style="flex:1;" onclick="toggleHeatmap()" />
+      <label style="flex: 20;" for="checkHeatmap">
+        Heatmap früherer Meldungen anzeigen.
+      </label>
+    </div>
+    <h3>Beschreibung des Gestanks</h3>
+    <div class="formRow">
+      <div style="flex: 1; display: flex; flex-direction: column;">
+        <select onchange="showDiverse()" id="selectFlavor" name="kind" required>
+          <option value="" disabled selected>Wonach riecht es?</option>
+          <option>Abfall</option>
+          <option>Gießerei</option>
+          <option>Kakao, Kakaorösten </option>
+          <option>Kaffee, Kaffeerösten </option>
+          <option>Backwaren</option>
+          <option>Hausbrand, Holzverbrennung</option>
+          <option>Sonstiges</option>
+        </select>
+        <input type="text" id="inputDiverse" placeholder="Bitte Geruch beschreiben" hidden />
+      </div>
+      <div class="intensityWrapper">
+        <div>
+          <label for="inputStinkIntensity">Intensität</label>
+        </div>
+        <div>
+          <input id="inputStinkIntensity" type="range" min="1" max="6">
+        </div>
+        <div class="intensityLabels">
+          <div>Sehr Schwach</div>
+          <div>Extrem Stark</div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <h3>Zeit des Gestanks</h3>
+    <fieldset>
+      <div class="formRow">
+        <div style="flex: 13em;">
+          <input type="radio" id="radioReportNow" name="reportTime" value="now" checked="checked"
+            onclick="togglePastInput()">
+          <label for="radioReportNow">Es stinkt gerade</label>
+        </div>
+        <div style="flex: 13em;">
+          <input type="radio" id="radioReportPast" name="reportTime" value="past" onclick="togglePastInput()">
+          <label for="radioReportPast">Der Gestank ist vorbei</label>
+        </div>
+      </div>
+    </fieldset>
+    <div id="pastTimeInput" hidden>
+      <div class="formRow">
+        <label style="flex: 9em;" for="inputDate">Tag des Gestanks:</label>
+        <input style="flex: 7em;" id="inputDate" type="date" onchange="updateWeather()" />
+      </div>
+      <div class="formRow">
+        <label style="flex: 9em;" for="inputStartTime">Start des Gestanks:</label>
+        <input style="flex: 7em;" id="inputStartTime" type="time" onchange="updateWeather()" />
+      </div>
+      <div class="formRow">
+        <label style="flex: 9em;" for="inputEndTime">Ende des Gestanks:</label>
+        <input style="flex: 7em;" id="inputEndTime" type="time" onchange="updateWeather()" />
+      </div>
+    </div>
+    <div class="formRow consentbox">
+      <input type="checkbox" style="flex: 1;" id="checkConsent" required> <label style="flex: 20;" for="checkConsent">
+        Ich bin damit einverstanden,
+        dass meine eingegebenen Daten an die Senatsverwaltung für Umwelt, Verkehr und Klimaschutz gesendet werden
+        sowie
+        meine Eingaben anonymisiert von dieser Website gespeichert werden.</label>
+    </div>
+    <button type="submit" onclick="sendForm()">Senden</button>
+  </form>
+  <div class="footer">
+    <img src="img/logo_long.svg" title="Wilhelm gibt keine Ruh." alt="Logo - Wilhelm gibt keine Ruh" />
+    <p>Die Seite hat einen Fehler? Bitte <a href="#" onclick="MailTemplater.sendMail()">hier</a>
+      melden. Danke!</p>
+  </div>
+
+  <script>
+    var mapView = new MapView("map");
+    var lastWeatherCoordinates = null;
+
+    async function updateWeather() {
+      var el = document.getElementById("weatherDisplay");
+      var coords = lastWeatherCoordinates;
+      if (!coords || !coords.latitude || !coords.longitude) {
+        el.setAttribute("hidden", "");
+        return;
+      }
+      try {
+        var weather;
+        var label;
+        var isPast = document.getElementById("radioReportPast").checked
+          && document.getElementById("inputDate").value;
+        if (isPast) {
+          var date = document.getElementById("inputDate").value;
+          var start = document.getElementById("inputStartTime").value;
+          var end = document.getElementById("inputEndTime").value;
+          var midTime = start || end || "12:00";
+          if (start && end) {
+            var s = new Date(date + "T" + start).getTime();
+            var e = new Date(date + "T" + end).getTime();
+            midTime = new Date((s + e) / 2).toTimeString().slice(0, 5);
+          }
+          weather = await WeatherService.getHistorical(coords, date, midTime);
+          label = "Wetter zum gemeldeten Zeitpunkt";
+        } else {
+          weather = await WeatherService.getCurrent(coords);
+          label = "Aktuelles Wetter am gemeldeten Ort";
+        }
+        var parts = WeatherService.describe(weather.weatherCode);
+        var text = parts[0] + " " + Math.round(weather.temperatureC) + "&nbsp;°C · " + parts[1];
+        if (weather.windSpeed != null && weather.windDirection != null) {
+          var wind = weather.windSpeed.toFixed(1).replace(".", ",");
+          var deg = Math.round(weather.windDirection);
+          text += " · 💨 " + wind + "&nbsp;m/s aus " + WeatherService.compass(deg)
+            + " <span class=\"windArrow\" style=\"transform:rotate(" + (deg + 180) + "deg)\""
+            + " title=\"Wind weht nach " + WeatherService.compass(deg + 180) + "\">↑</span>";
+        }
+        el.innerHTML = "<span title=\"" + label + "\">" + text + "</span>"
+          + "<span class=\"weatherSource\">Wetterdaten: "
+          + "<a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo.com</a>"
+          + " (CC&nbsp;BY&nbsp;4.0)</span>";
+        el.removeAttribute("hidden");
+      } catch (error) {
+        document.getElementById("weatherDisplay").setAttribute("hidden", "");
+      }
+    }
+
+    async function sendForm() {
+      var form = document.getElementById("form");
+      var submitStatus = document.getElementById("submitStatus");
+      showOverlay();
+      var statusMessage = "";
+
+      if (form.checkValidity()) {
+        try {
+          address = {
+            country: "Germany",
+            city: "Berlin",
+            zip: "13158",
+            street: document.getElementById("inputStreet").value,
+            number: document.getElementById("inputNumber").value
+          };
+
+          coordinates = {
+            latitude: parseFloat(document.getElementById("inputLatitude").value),
+            longitude: parseFloat(document.getElementById("inputLongitude").value)
+          }
+
+          if (!coordinates.latitude || !coordinates.longitude) {
+            coordinates = await LocationService.getCoordinatesForAddress(address);
+          }
+
+          let reportToSend = {
+            location: {
+              address: address,
+              coordinates: coordinates,
+              isHome: document.getElementById("checkIsHome").checked
+            },
+            stink: {
+              kind: document.getElementById("selectFlavor").value === "Sonstiges" ? document.getElementById("inputDiverse").value : document.getElementById("selectFlavor").value,
+              intensity: document.getElementById("inputStinkIntensity").value
+            },
+            reporter: {
+              name: `${document.getElementById("inputGivenName").value} ${document.getElementById("inputSurname").value}`,
+              email: document.getElementById("inputEmail").value
+            }
+          };
+
+          if (document.getElementById('radioReportPast').checked) {
+            const startTime = new Date(document.getElementById('inputDate').value + " " + document.getElementById('inputStartTime').value);
+            const endTime = new Date(document.getElementById('inputDate').value + " " + document.getElementById('inputEndTime').value);
+            if (endTime <= startTime) { throw new StartBeforeEndException(); }
+            reportToSend = { ...reportToSend, timeFrame: { startTime: startTime.toISOString(), endTime: endTime.toISOString() } };
+          }
+
+          if (await ReportService.postReport(reportToSend) === true) {
+            statusMessage = "Danke für deine Meldung!";
+            resetStink();
+            if (document.getElementById("checkHeatmap").checked) {
+              const reports = await ReportService.getReports();
+              mapView.showHeatMap(reports);
+            }
+          }
+        }
+        catch (error) {
+          if (error instanceof AddressNotFoundException) {
+            statusMessage = "Wir konnten diese Adresse nicht in Wilhelmsruh finden. Bitte prüfe deine Eingabe oder nutze die Standortbestimmung.";
+          }
+          else if (error instanceof StartBeforeEndException) {
+            statusMessage = "Das Ende des Gestanks muss nach dem Beginn liegen.";
+          }
+          else if (error instanceof TypeError && (error.message.includes("NetworkError") || error.message.includes("Failed to fetch"))) {
+            statusMessage = "Server nicht erreichbar. Bitte versuch es später noch einmal.";
+          }
+          else {
+            statusMessage = `Unerwarteter Fehler: ${error}`;
+          }
+        }
+      }
+      else {
+        statusMessage = "Bitte prüfe deine Angaben.";
+      }
+      submitStatus.innerText = statusMessage;
+    }
+
+    function getLocation() {
+      document.getElementById("inputStreet").setAttribute("disabled", true);
+      document.getElementById("inputNumber").setAttribute("disabled", true);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(saveAndshowPosition, showCoordinateError);
+      } else {
+        var positionDisplay = document.getElementById("positionDisplay");
+        positionDisplay.innerHTML = "Dein Browser unterstützt keine Ortung.";
+        positionDisplay.removeAttribute("hidden", "");
+      }
+      document.getElementById("inputStreet").removeAttribute("disabled");
+      document.getElementById("inputNumber").removeAttribute("disabled");
+    }
+
+    function showCoordinateError() {
+      var positionDisplay = document.getElementById("positionDisplay");
+      positionDisplay.innerHTML = "Ortung nicht erfolgreich. Bitte räume dieser Seite Zugriff auf deinen Standort ein oder nutze die Standortangabe als Adresse.";
+      positionDisplay.removeAttribute("hidden", "");
+    }
+
+    async function saveAndshowPosition(position) {
+      if (position.coords) {
+        coordinates = position.coords;
+        mapView.displayPosition(coordinates);
+        document.getElementById("inputLatitude").value = coordinates.latitude;
+        document.getElementById("inputLongitude").value = coordinates.longitude;
+        lastWeatherCoordinates = coordinates;
+        updateWeather();
+        try {
+          const address = await LocationService.getAddressForCoordinates(coordinates);
+          document.getElementById("inputStreet").value = address.street;
+          document.getElementById("inputNumber").value = address.number;
+          positionDisplay.setAttribute("hidden", true);
+        } catch (error) {
+          if (error instanceof PositionNotSupportedException) {
+            statusMessage = "Es scheint, als seist du außerhalb von Wilhelmsruh. Leider ist das aktuell nicht unterstützt.";
+            var positionDisplay = document.getElementById("positionDisplay");
+            positionDisplay.innerHTML = statusMessage;
+            positionDisplay.removeAttribute("hidden", "");
+          }
+        }
+        document.getElementById("inputStreet").removeAttribute("required");
+        document.getElementById("inputNumber").removeAttribute("required");
+      }
+    }
+
+    async function updateCoordinates() {
+      if (!document.getElementById("inputStreet").value || !document.getElementById("inputNumber").value) {
+        resetCoordinates();
+      }
+      else {
+        var address = {
+          country: "Germany",
+          city: "Berlin",
+          zip: "13158",
+          street: document.getElementById("inputStreet").value,
+          number: document.getElementById("inputNumber").value
+        };
+        coordinates = await LocationService.getCoordinatesForAddress(address);
+        mapView.displayPosition(coordinates);
+        positionDisplay.setAttribute("hidden", true);
+        lastWeatherCoordinates = coordinates;
+        updateWeather();
+      }
+    }
+
+    function resetCoordinates() {
+      lastWeatherCoordinates = null;
+      document.getElementById("weatherDisplay").setAttribute("hidden", "");
+      document.getElementById("inputLatitude").value = undefined;
+      document.getElementById("inputLongitude").value = undefined;
+      document.getElementById("inputStreet").setAttribute("required", true);
+      document.getElementById("inputNumber").setAttribute("required", true);
+      document.getElementById("positionDisplay").setAttribute("hidden", true);
+      mapView.reset();
+    }
+
+    function showDiverse() {
+      var inputDiverse = document.getElementById("inputDiverse");
+      var selection = document.getElementById("selectFlavor").value;
+      if (selection == "Sonstiges") {
+        inputDiverse.removeAttribute("hidden");
+        inputDiverse.setAttribute("required", "");
+      }
+      else {
+        inputDiverse.removeAttribute("required");
+        inputDiverse.setAttribute("hidden", "");
+      }
+    }
+
+    function showOverlay() {
+      document.getElementById("overlay").style.display = "flex";
+    }
+
+    function hideOverlay() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    function resetStink() {
+      document.getElementById("selectFlavor").options.selectedIndex = 0;
+      document.getElementById("inputStinkIntensity").value = 3;
+    }
+
+    async function toggleHeatmap() {
+      if (document.getElementById("checkHeatmap").checked) {
+        try {
+          const reports = await ReportService.getReports();
+          mapView.showHeatMap(reports);
+        } catch (error) {
+          console.error("Could not fetch reports for heatmap", error);
+          document.getElementById("checkHeatmap").checked = false;
+        }
+      } else {
+        mapView.hideHeatMap();
+      }
+    }
+
+    function setDefaults() {
+      var now = new Date();
+      var offset = now.getTimezoneOffset();
+      var hourAgo = new Date(now.valueOf() - offset * 60000 - 3600000);
+      var fiveDaysAgo = new Date(now.valueOf() - offset * 60000 - 3600000 * 24 * 5);
+      var nowIsoString = new Date(now.valueOf() - offset * 60000).toISOString();
+      var todayString = nowIsoString.substring(0, 10);
+      var fiveDaysAgoString = fiveDaysAgo.toISOString().substring(0, 10);
+      var nowTimeString = nowIsoString.substring(11, 16);
+      var hourAgoTimeString = hourAgo.toISOString().substring(11, 16);
+      document.getElementById("inputDate").setAttribute("max", todayString);
+      document.getElementById("inputDate").setAttribute("min", fiveDaysAgoString);
+      document.getElementById("inputDate").value = todayString;
+      document.getElementById("inputEndTime").value = nowTimeString;
+      document.getElementById("inputStartTime").value = hourAgoTimeString;
+      togglePastInput();
+    }
+
+    function togglePastInput() {
+      var pastInputBox = document.getElementById("pastTimeInput");
+      var inputChildren = pastInputBox.getElementsByTagName("input");
+      if (document.getElementById("radioReportNow").checked) {
+        pastInputBox.setAttribute("hidden", "");
+        for (let index = 0; index < inputChildren.length; index++) {
+          inputChildren[index].removeAttribute("required");
+        }
+      } else {
+        pastInputBox.removeAttribute("hidden");
+        for (let index = 0; index < inputChildren.length; index++) {
+          inputChildren[index].setAttribute("required", "");
+        }
+      }
+      updateWeather();
+    }
+  </script>
+</body>
+
+</html>

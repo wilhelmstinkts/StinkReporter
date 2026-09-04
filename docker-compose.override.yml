@@ -1,0 +1,19 @@
+# Local-only overrides (not committed upstream originally).
+# Docker Compose auto-merges this file on top of docker-compose.yml.
+services:
+  # Run the amd64-only mysql 5.7 image on Apple Silicon via emulation.
+  mysql:
+    platform: linux/amd64
+
+  # Full-site preview: the frontend (frontend/) served at "/", with the local
+  # API mounted at "/api". The API uses source/env.php (test config): local
+  # MySQL, mocked weather, mail disabled. Open http://localhost:8081
+  site:
+    build: ./docker/apache
+    depends_on:
+      - mysql
+    volumes:
+      - ./frontend:/var/www/html
+      - ./source:/var/www/html/api
+    ports:
+      - "8081:80"

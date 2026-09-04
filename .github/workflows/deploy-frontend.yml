@@ -1,0 +1,29 @@
+name: Deploy frontend
+
+# Uploads the static frontend (frontend/) to the web root via FTP.
+# The backend is deployed separately by release.yml (source/ -> api/).
+#
+# Triggers:
+#   - a published GitHub Release (same as the backend, so one release ships both)
+#   - manual run from the Actions tab (workflow_dispatch)
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout head
+        uses: actions/checkout@v2
+      - name: Upload ftp
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: "frontend"
+          # "." = the FTP user's root, i.e. the web root that also contains api/.
+          # Verify this matches your KAS FTP path before the first real run.
+          remoteDir: "."
