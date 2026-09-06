@@ -5,6 +5,12 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: totallyunsafe
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-ptotallyunsafe"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
     volumes:
       - ./infrastructure/sql:/docker-entrypoint-initdb.d
     ports:
@@ -23,7 +29,8 @@ services:
     build: ./docker/apache
     container_name: apache
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     volumes:
       - ./source:/var/www/html/
     ports:
