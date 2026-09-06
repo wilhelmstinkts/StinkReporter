@@ -10,7 +10,7 @@ jobs:
       - name: Checkout head
         uses: actions/checkout@v2
       - name: Run the app
-        run: docker compose up -d
+        run: docker compose up -d --wait mysql apache
       - name: Install requirements
         run: docker compose exec -T apache composer update
       - name: Unit Tests
