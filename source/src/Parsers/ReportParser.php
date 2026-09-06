@@ -14,7 +14,7 @@ class ReportParser
 {
     public static function parseBodyToReport(array $body): \OpenAPIServer\DTOs\Report
     {
-        if (is_null($body["report"] ?? null)) {
+        if (!isset($body["report"])) {
             throw new Exception("Missing object report in the request body", 1);
         }
         $report = $body["report"];
@@ -24,7 +24,7 @@ class ReportParser
         $stink = ReportParser::parseStink($report["stink"] ?? null);
         $reporter = ReportParser::parseReporter($report["reporter"] ?? null);
         $weatherService = \Environment\Environment::weatherService();
-        if (is_null($report["timeFrame"] ?? null)) {
+        if (!isset($report["timeFrame"])) {
             $time = new DateTime("now", new \DateTimeZone("UTC"));
             $weather = $weatherService->getCurrentWeather($location->coordinates);
             return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
@@ -42,7 +42,7 @@ class ReportParser
         }
 
         foreach ($schema["properties"] as $propertyName => $value) {
-            if (is_null($given[$propertyName] ?? null)) {
+            if (!isset($given[$propertyName])) {
                 if (in_array($propertyName, $schema["required"])) {
                     throw new Exception("Required attribute $propertyName missing.");
                 }
@@ -79,7 +79,7 @@ class ReportParser
             $type = gettype($location);
             throw new Exception("Expected an object as location but got $location with type $type", 1);
         }
-        $adress = null;
+        $address = null;
         $adressArray = $location["address"] ?? null;
         $coordinatesArray = $location["coordinates"] ?? null;
         $isHome = $location["isHome"] ?? null;
