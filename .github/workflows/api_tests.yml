@@ -5,16 +5,21 @@ on: [push]
 jobs:
   test:
    runs-on: ubuntu-latest
-       
+
    steps:
     - name: Checkout head
       uses: actions/checkout@v2
     - name: Run the app
-      run: docker-compose up -d
+      # --wait blocks until mysql reports healthy (see the healthcheck in
+      # docker-compose.yml); without it the first requests hit a mysql that
+      # is still initializing and come back 500. The services are named
+      # explicitly because tavern has no long-running command - it exits
+      # immediately and --wait would treat that as a failure.
+      run: docker compose up -d --wait mysql apache
     - name: Install requirements
-      run: docker-compose exec -T apache composer update --no-dev --no-scripts
+      run: docker compose exec -T apache composer update --no-dev --no-scripts
     - name: Delete unit tests
       working-directory: ./source
       run: rm -r ./test
     - name: Run Api Tests
-      run: docker-compose run -T tavern /apitests/run-api-tests.sh
+      run: docker compose run -T tavern /apitests/run-api-tests.sh

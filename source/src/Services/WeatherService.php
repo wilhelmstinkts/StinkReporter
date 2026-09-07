@@ -15,29 +15,36 @@ class WeatherService
     public string $baseUrl;
     public string $apiKey;
     public string $historicMock;
+    public string $currentMock;
 
     public function __construct(string $baseUrl, string $apiKey)
     {
         $this->baseUrl = $baseUrl;
         $this->apiKey = $apiKey;
         $this->historicMock = "";
+        $this->currentMock = "";
     }
 
-    public static function createMock(string $baseUrl, string $mock)
+    public static function createMock(string $baseUrl, string $mock, string $currentMock = "")
     {
         $service = new WeatherService($baseUrl, "mockKey");
         $service->historicMock = $mock;
+        $service->currentMock = $currentMock;
         return $service;
     }
 
     public function getCurrentWeather(\OpenAPIServer\DTOs\Coordinates $coordinates): \OpenAPIServer\DTOs\Weather
     {
-        $requestUri = "{$this->baseUrl}/weather?lat={$coordinates->latitude}&lon={$coordinates->longitude}&APPID={$this->apiKey}";
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "$requestUri");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $apiResponse = curl_exec($curl);
-        curl_close($curl);
+        if ($this->currentMock != "") {
+            $apiResponse = $this->currentMock;
+        } else {
+            $requestUri = "{$this->baseUrl}/weather?lat={$coordinates->latitude}&lon={$coordinates->longitude}&APPID={$this->apiKey}";
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, "$requestUri");
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            $apiResponse = curl_exec($curl);
+            curl_close($curl);
+        }
 
         return WeatherService::parseCurrentApiResponse($apiResponse);
     }
@@ -58,7 +65,7 @@ class WeatherService
         $responseArray = json_decode($apiResponse, true);
         $temperature = $responseArray["current"]["temp"];
         $windSpeed = $responseArray["current"]["wind_speed"];
-        $windGust = $responseArray["current"]["wind_gust"];
+        $windGust = $responseArray["current"]["wind_gust"] ?? null;
         $windDirection = $responseArray["current"]["wind_deg"];
 
         return new Weather($temperature, new Wind($windDirection, $windSpeed, $windGust));

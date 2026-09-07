@@ -3,3 +3,10 @@
 **/.venv
 **/.vscode
 **/env_prod.php
+**/env_old.php
+
+# Local release snapshot with production secrets - keep out of git
+hierstinkts/
+
+# macOS cruft
+**/.DS_Store
