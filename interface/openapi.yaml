@@ -150,9 +150,11 @@ components:
         - email
     weather:
       type: object
+      description: "Weather at the reported location and time"
       properties:
         temperature:
           type: number
+          description: "Temperature in Kelvin"
           example: 270
         wind:
           $ref: "#/components/schemas/wind"
@@ -164,13 +166,20 @@ components:
       properties:
         direction:
           type: number
+          description: "Direction the wind is coming from, in degrees"
           example: 270
+          minimum: 0
+          maximum: 360
         speed:
           type: number
+          description: "Wind speed in m/s"
           example: 3.5
+          minimum: 0
         gustSpeed:
           type: number
+          description: "Gust speed in m/s"
           example: 12.7
+          minimum: 0
       required:
         - direction
         - speed
@@ -183,6 +192,14 @@ components:
           $ref: "#/components/schemas/timeFrame"
         reporter:
           $ref: "#/components/schemas/reporter"
+        weather:
+          allOf:
+            - $ref: "#/components/schemas/weather"
+          description: >-
+            Weather the client already looked up for this location and time.
+            Optional - the server fetches it itself when omitted, so a report
+            is never rejected just because the client could not reach the
+            weather service.
       required:
         - reporter
     reportOutput:
