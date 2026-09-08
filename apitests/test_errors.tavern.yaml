@@ -169,3 +169,52 @@ stages:
         content-type: application/json
     response:
       status_code: 400
+
+  - name: Wind direction outside 0-360
+    request:
+      url: http://apache/api/v0/report
+      method: POST
+      json:
+        report:
+          location:
+            coordinates:
+              latitude: 52.587516
+              longitude: 13.362886
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+          weather:
+            temperature: 285
+            wind:
+              direction: 400
+              speed: 4
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+
+  - name: Weather without wind
+    request:
+      url: http://apache/api/v0/report
+      method: POST
+      json:
+        report:
+          location:
+            coordinates:
+              latitude: 52.587516
+              longitude: 13.362886
+          stink:
+            kind: "Biomüll"
+            intensity: 3
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+          weather:
+            temperature: 285
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400

@@ -117,3 +117,56 @@ stages:
             kind: "Gießerei"
             intensity: 4
           time: "2021-01-25T20:30:00+0000"
+
+  - name: Post a report with weather supplied by the client
+    request:
+      url: http://apache/api/v0/report
+      method: POST
+      json:
+        report:
+          location:
+            coordinates:
+              latitude: 52.5860994
+              longitude: 13.3638483
+            address:
+              street: "Hauptstraße"
+              number: "1"
+              zip: "13158"
+              city: "Berlin"
+              country: "Germany"
+          stink:
+            kind: "Kaffeerösten"
+            intensity: 2
+          reporter:
+            name: "Jane Doe"
+            email: "jane.doe@provider.org"
+          weather:
+            temperature: 285
+            wind:
+              direction: 90
+              speed: 4
+              gustSpeed: 9
+    response:
+      status_code: 201
+
+  - name: The client's weather is what gets stored
+    request:
+      url: http://apache/api/v0/report
+      method: GET
+    response:
+      status_code: 200
+      strict: no
+      json:
+        - stink:
+            kind: "Biomüll"
+        - stink:
+            kind: "Gießerei"
+        - stink:
+            kind: "Kaffeerösten"
+            intensity: 2
+          weather:
+            temperature: 285
+            wind:
+              direction: 90
+              speed: 4
+              gustSpeed: 9
