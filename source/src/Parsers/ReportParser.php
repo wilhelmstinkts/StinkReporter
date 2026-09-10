@@ -23,14 +23,19 @@ class ReportParser
         $location = ReportParser::parseLocation($report["location"] ?? null);
         $stink = ReportParser::parseStink($report["stink"] ?? null);
         $reporter = ReportParser::parseReporter($report["reporter"] ?? null);
-        $weatherService = \Environment\Environment::weatherService();
+        $submittedWeather = ReportParser::parseWeather($report["weather"] ?? null);
+
         if (!isset($report["timeFrame"])) {
             $time = new DateTime("now", new \DateTimeZone("UTC"));
-            $weather = $weatherService->getCurrentWeather($location->coordinates);
+            $weather = $submittedWeather
+                ?? \Environment\Environment::weatherService()->getCurrentWeather($location->coordinates);
             return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
         }
+
         $timeFrame = ReportParser::parseTimeFrame($report["timeFrame"]);
-        $weather = $weatherService->getHistoricWeather($location->coordinates, $timeFrame->averageTime());
+        $weather = $submittedWeather
+            ?? \Environment\Environment::weatherService()
+                ->getHistoricWeather($location->coordinates, $timeFrame->averageTime());
         return \OpenAPIServer\DTOs\Report::createWithTimeFrame($location, $timeFrame, $stink, $weather, $reporter);
     }
 
@@ -48,6 +53,51 @@ class ReportParser
                 }
             }
         }
+    }
+
+    /**
+     * The client may send the weather it already looked up, so the server does
+     * not have to fetch it a second time. Returns null when nothing was sent,
+     * in which case the caller falls back to looking it up itself.
+     */
+    private static function parseWeather($weather): ?\OpenAPIServer\DTOs\Weather
+    {
+        if (is_null($weather)) {
+            return null;
+        }
+
+        $weatherSchema = \OpenAPIServer\Model\Weather::getOpenApiSchema(true);
+        ReportParser::throwOnMissingProps($weatherSchema, $weather);
+
+        $wind = $weather["wind"];
+        $windSchema = \OpenAPIServer\Model\Wind::getOpenApiSchema(true);
+        ReportParser::throwOnMissingProps($windSchema, $wind);
+
+        $direction = ReportParser::toNumber($wind["direction"], "wind direction");
+        $speed = ReportParser::toNumber($wind["speed"], "wind speed");
+        $gustSpeed = isset($wind["gustSpeed"])
+            ? ReportParser::toNumber($wind["gustSpeed"], "gust speed")
+            : null;
+
+        if ($direction < 0 || $direction > 360) {
+            throw new Exception("Wind direction must be between 0 and 360 degrees", 1);
+        }
+        if ($speed < 0 || (!is_null($gustSpeed) && $gustSpeed < 0)) {
+            throw new Exception("Wind speeds cannot be negative", 1);
+        }
+
+        return new \OpenAPIServer\DTOs\Weather(
+            ReportParser::toNumber($weather["temperature"], "temperature"),
+            new \OpenAPIServer\DTOs\Wind($direction, $speed, $gustSpeed)
+        );
+    }
+
+    private static function toNumber($value, string $name): float
+    {
+        if (!is_numeric($value)) {
+            throw new Exception("Expected a number for $name", 1);
+        }
+        return (float) $value;
     }
 
     private static function parseStink($stink): \OpenAPIServer\DTOs\Stink
