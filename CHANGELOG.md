@@ -5,13 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.3.0] - 2026-09-11
 
 ### Added
 
 - Reports may carry the weather the client already looked up. It is optional:
   when omitted the server fetches it itself, so a report is never rejected
   because the client could not reach the weather service.
+
+### Changed
+
+- Weather is read from Open-Meteo instead of OpenWeatherMap. No API key is
+  needed any more. Units are unchanged: temperature in Kelvin, wind in m/s,
+  direction in degrees.
+- **breaking for deployment**: `weatherService()` in the production `env.php`
+  must construct `WeatherService` without arguments. The old call with the
+  OpenWeatherMap URL and key does not fail, it silently sends the requests to
+  the wrong host.
+- Requires PHP 8.1 or newer. Dependencies updated (Slim 4.15, slim/psr7 1.8).
+- Weather lookups time out after 10 seconds instead of holding up the report.
+
+### Fixed
+
+- Past weather no longer depends on OpenWeatherMap's One Call 2.5, which was
+  retired in 2024.
+- A report missing one of its sections is answered with 400 instead of 500.
 
 ## [1.2.0] - 2021-02-26
 
