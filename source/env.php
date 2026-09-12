@@ -5,7 +5,9 @@ namespace Environment;
 
 class Environment
 {
-    public static function weatherService(): \OpenAPIServer\Services\WeatherService
+    public static $useMockWeatherService = true;
+
+    public static function mockWeatherService(): \OpenAPIServer\Services\WeatherService
     {
         // Recorded Open-Meteo responses, so tests never depend on the network.
         $historicMock = <<<EOD
