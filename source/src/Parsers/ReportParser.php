@@ -24,17 +24,22 @@ class ReportParser
         $stink = ReportParser::parseStink($report["stink"] ?? null);
         $reporter = ReportParser::parseReporter($report["reporter"] ?? null);
         $submittedWeather = ReportParser::parseWeather($report["weather"] ?? null);
+        $weatherResolver = isset(\Environment\Environment::$useMockWeatherService) &&
+            \Environment\Environment::$useMockWeatherService == true
+                ? \Environment\Environment::mockWeatherService()
+                : new \OpenAPIServer\Services\WeatherService();
 
         if (!isset($report["timeFrame"])) {
             $time = new DateTime("now", new \DateTimeZone("UTC"));
             $weather = $submittedWeather
-                ?? \Environment\Environment::weatherService()->getCurrentWeather($location->coordinates);
+                ??
+                $weatherResolver->getCurrentWeather($location->coordinates);
             return new \OpenAPIServer\DTOs\Report($location, $stink, $weather, $time, $reporter);
         }
 
         $timeFrame = ReportParser::parseTimeFrame($report["timeFrame"]);
         $weather = $submittedWeather
-            ?? \Environment\Environment::weatherService()
+            ?? $weatherResolver
                 ->getHistoricWeather($location->coordinates, $timeFrame->averageTime());
         return \OpenAPIServer\DTOs\Report::createWithTimeFrame($location, $timeFrame, $stink, $weather, $reporter);
     }
